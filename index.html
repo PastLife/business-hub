@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#FAFAF7" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Business Hub" />
+<title>Business Hub</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: #FAFAF7;
+    color: #1A1A1A;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Sukhumvit Set", "Thonburi", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .serif {
+    font-family: "Georgia", "Times New Roman", "Sukhumvit Set", serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Pastel palette */
+  :root {
+    --bg: #FAFAF7;
+    --card: #FFFFFF;
+    --line: #EDECE6;
+    --text: #1A1A1A;
+    --muted: #8B8B85;
+    --pastel-pink: #FFD6E0;
+    --pastel-peach: #FFE2C9;
+    --pastel-yellow: #FFF1B8;
+    --pastel-mint: #C9F0DC;
+    --pastel-sky: #C9E4F5;
+    --pastel-lavender: #E0D4F7;
+    --pastel-rose: #F5D0CE;
+  }
+
+  .app { max-width: 480px; margin: 0 auto; padding: 0 0 120px; min-height: 100vh; min-height: 100dvh; }
+
+  /* Header */
+  .header { padding: 24px 20px 12px; }
+  .eyebrow {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+  }
+  .h-title { font-size: 38px; line-height: 1; margin-top: 6px; letter-spacing: -0.02em; }
+  .h-sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+  /* Summary cards */
+  .summary { padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .sum-card {
+    border-radius: 20px; padding: 16px; position: relative; overflow: hidden;
+    background: var(--card); border: 1px solid var(--line);
+  }
+  .sum-card.tinted { border: 1px solid rgba(0,0,0,0.06); }
+  .sum-card.tinted.unpaid {
+    background-color: #FFD6C2;
+    background-image: linear-gradient(135deg, #FFE7CF 0%, #FFC2D4 100%);
+  }
+  .sum-card.tinted.monthly {
+    background-color: #C9E4F5;
+    background-image: linear-gradient(135deg, #C9E4F5 0%, #D6C7F0 100%);
+  }
+  .sum-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #5A5A55; font-weight: 700; }
+  .sum-value { font-size: 26px; margin-top: 8px; letter-spacing: -0.02em; font-weight: 700; color: #1A1A1A; }
+
+  /* Tabs */
+  .tabs { padding: 20px; }
+  .tab-row {
+    background: #F1F0EA; border-radius: 999px; padding: 4px; display: flex; gap: 4px;
+  }
+  .tab {
+    flex: 1; padding: 10px 12px; border-radius: 999px; border: none; background: transparent;
+    font-family: inherit; font-size: 13px; font-weight: 500; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tab.active { background: white; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+  /* Content */
+  .content { padding: 0 20px; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+  .empty-title { font-size: 16px; font-weight: 500; color: #4A4A45; margin-bottom: 4px; }
+  .empty-sub { font-size: 13px; }
+
+  /* Expense card (in overview) */
+  .exp-card {
+    background: var(--card); border-radius: 20px; padding: 16px; margin-bottom: 10px;
+    border: 1px solid var(--line); display: flex; gap: 12px; align-items: center;
+    transition: all 0.2s;
+  }
+  .exp-card.urgent { border-color: #FFB4B4; background: #FFF5F5; }
+  .exp-card.warning { border-color: #FFE0A0; background: #FFFBF0; }
+  .biz-avatar {
+    width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 600;
+    overflow: hidden; position: relative;
+  }
+  .biz-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .exp-info { flex: 1; min-width: 0; }
+  .exp-biz-name { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .exp-name { font-size: 16px; font-weight: 500; margin-top: 2px; }
+  .exp-meta { font-size: 12px; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .badge-day { padding: 2px 8px; border-radius: 999px; font-weight: 500; font-size: 11px; }
+  .badge-day.urgent { background: #FFD6D6; color: #B43030; }
+  .badge-day.warning { background: #FFE9C2; color: #A86B0A; }
+  .badge-day.normal { background: #E5F0E0; color: #4A6B40; }
+  .exp-amount { text-align: right; flex-shrink: 0; }
+  .exp-price { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+  .pay-btn {
+    margin-top: 6px; padding: 5px 11px; border-radius: 999px; border: none;
+    background: #1A1A1A; color: white; font-family: inherit; font-size: 11px;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.05em;
+  }
+  .pay-btn:active { transform: scale(0.95); }
+
+  /* Business card */
+  .biz-card {
+    background: var(--card); border-radius: 24px; overflow: hidden;
+    border: 1px solid var(--line); margin-bottom: 14px;
+  }
+  .biz-header {
+    padding: 16px; display: flex; gap: 14px; align-items: center; position: relative;
+  }
+  .biz-avatar-lg {
+    width: 56px; height: 56px; border-radius: 16px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 600; overflow: hidden;
+  }
+  .biz-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
+  .biz-title { flex: 1; min-width: 0; }
+  .biz-name { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+  .biz-note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .biz-actions { display: flex; gap: 4px; }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 10px; border: none; background: #F5F4EE;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .icon-btn:active { transform: scale(0.92); }
+  .icon-btn.danger:hover { background: #FFE5E5; }
+
+  .biz-stats { padding: 0 16px 12px; display: flex; gap: 16px; }
+  .stat-item { flex: 1; }
+  .stat-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .stat-value { font-size: 16px; font-weight: 600; margin-top: 2px; }
+  .stat-value.unpaid { color: #C56A0A; }
+
+  .exp-list { padding: 0 16px 12px; }
+  .exp-row {
+    display: flex; gap: 10px; align-items: center; padding: 10px 12px;
+    background: #FAFAF6; border-radius: 12px; margin-bottom: 6px;
+  }
+  .check {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #D5D4CE;
+    background: white; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .check.checked { background: #1A1A1A; border-color: #1A1A1A; color: white; font-size: 12px; }
+  .exp-row-info { flex: 1; min-width: 0; }
+  .exp-row-name { font-size: 14px; font-weight: 500; }
+  .exp-row-name.paid { text-decoration: line-through; color: var(--muted); }
+  .exp-row-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .exp-row-price { font-size: 14px; font-weight: 600; }
+  .exp-row-price.paid { color: var(--muted); }
+  .x-btn {
+    width: 24px; height: 24px; border-radius: 50%; border: none; background: transparent;
+    color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1;
+  }
+  .x-btn:hover { background: #FFE5E5; color: #B43030; }
+
+  .add-exp {
+    margin: 0 16px 16px; padding: 12px; border: 1.5px dashed #D5D4CE;
+    border-radius: 14px; background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 13px; cursor: pointer; width: calc(100% - 32px);
+    font-weight: 500;
+  }
+  .add-exp:hover { border-color: #1A1A1A; color: #1A1A1A; }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: calc(20px + env(safe-area-inset-bottom)); left: 50%;
+    transform: translateX(-50%); padding: 14px 24px; border-radius: 999px;
+    background-color: #1A1A1A;
+    color: #FFFFFF; border: none; font-family: inherit;
+    font-size: 14px; font-weight: 600; cursor: pointer; display: flex;
+    align-items: center; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 40;
+  }
+  .fab svg { stroke: #FFFFFF; }
+  .fab:active { transform: translateX(-50%) scale(0.96); }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50;
+    display: flex; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    animation: fade 0.2s ease;
+  }
+  @keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+  .modal {
+    width: 100%; max-width: 480px; background: white;
+    border-radius: 28px 28px 0 0; padding: 8px 20px calc(28px + env(safe-area-inset-bottom));
+    animation: slide 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 92vh; overflow-y: auto;
+  }
+  @keyframes slide { from { transform: translateY(100%) } to { transform: translateY(0) } }
+  .grab { width: 40px; height: 4px; background: #E5E4DE; border-radius: 999px; margin: 8px auto 16px; }
+  .modal h2 { font-size: 24px; margin-bottom: 16px; letter-spacing: -0.01em; }
+
+  .field { margin-bottom: 14px; }
+  .label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 6px; display: block; }
+  .input {
+    width: 100%; padding: 13px 14px; border-radius: 14px; border: 1.5px solid var(--line);
+    background: #FAFAF7; font-family: inherit; font-size: 15px; color: var(--text);
+    outline: none; transition: border-color 0.15s;
+  }
+  .input:focus { border-color: #1A1A1A; background: white; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .color-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .color-dot {
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .color-dot.selected { border-color: #1A1A1A; transform: scale(1.1); }
+
+  .image-picker {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .image-preview {
+    width: 64px; height: 64px; border-radius: 16px; overflow: hidden;
+    background: var(--pastel-mint); display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 600; color: #1A1A1A; flex-shrink: 0;
+  }
+  .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .pick-btn {
+    flex: 1; padding: 11px; border-radius: 12px; border: 1.5px dashed #D5D4CE;
+    background: transparent; font-family: inherit; font-size: 13px; color: var(--muted);
+    cursor: pointer; font-weight: 500;
+  }
+  .pick-btn:hover { border-color: #1A1A1A; color: #1A1A1A; }
+  .clear-btn {
+    padding: 11px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: white; font-family: inherit; font-size: 12px; color: var(--muted);
+    cursor: pointer;
+  }
+
+  .freq-row { display: flex; gap: 8px; }
+  .freq-btn {
+    flex: 1; padding: 11px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: white; font-family: inherit; font-size: 14px; color: var(--muted);
+    cursor: pointer; font-weight: 500;
+  }
+  .freq-btn.active { border-color: #1A1A1A; background: #1A1A1A; color: white; }
+
+  .icon-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
+  }
+  .icon-pick {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; font-size: 20px; cursor: pointer;
+    background: #F5F4EE; transition: all 0.15s;
+  }
+  .icon-pick.selected { background: #1A1A1A; transform: scale(1.1); }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .btn {
+    flex: 1; padding: 14px; border-radius: 14px; border: none;
+    font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .btn-cancel { background: #F1F0EA; color: var(--muted); }
+  .btn-confirm { background: #1A1A1A; color: white; }
+  .btn:active { transform: scale(0.97); }
+
+  /* Hide native inputs */
+  input[type="file"] { display: none; }
+  /* Number input arrows off */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+</style>
+</head>
+<body>
+  <div id="app" class="app"></div>
+
+  <script>
+    // ===== Storage =====
+    const STORAGE_KEY = 'businessHub_v1';
+    let state = { businesses: [], tab: 'overview' };
+
+    const load = () => {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) state.businesses = JSON.parse(raw);
+      } catch (e) { console.error(e); }
+    };
+    const save = () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.businesses));
+    };
+
+    // ===== Helpers =====
+    const fmt = (n) => '฿' + Number(n).toLocaleString('th-TH', { maximumFractionDigits: 2 });
+    const today = new Date();
+    const currentDay = today.getDate();
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
+    const PASTELS = [
+      { name: 'pink', bg: '#FFD6E0' },
+      { name: 'peach', bg: '#FFE2C9' },
+      { name: 'yellow', bg: '#FFF1B8' },
+      { name: 'mint', bg: '#C9F0DC' },
+      { name: 'sky', bg: '#C9E4F5' },
+      { name: 'lavender', bg: '#E0D4F7' },
+      { name: 'rose', bg: '#F5D0CE' },
+      { name: 'sage', bg: '#D9E5C9' },
+    ];
+
+    const escapeHtml = (s) => String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    // ===== Render =====
+    const app = document.getElementById('app');
+
+    const computed = () => {
+      const all = state.businesses.flatMap(b => b.expenses.map(e => ({...e, bizName: b.name, bizId: b.id, bizColor: b.color, bizImage: b.image})));
+      const upcoming = all.filter(e => !e.paid).map(e => {
+        let d = e.dueDay - currentDay;
+        if (d < 0) d += daysInMonth;
+        return {...e, daysUntil: d};
+      }).sort((a,b) => a.daysUntil - b.daysUntil);
+      const totalUnpaid = upcoming.reduce((s,e) => s + e.amount, 0);
+      const totalMonthly = all.filter(e => e.frequency === 'monthly').reduce((s,e) => s + e.amount, 0);
+      return { all, upcoming, totalUnpaid, totalMonthly };
+    };
+
+    const render = () => {
+      const c = computed();
+      app.innerHTML = `
+        <div class="header">
+          <div class="eyebrow">Personal Ledger</div>
+          <div class="h-title serif">Business Hub</div>
+          <div class="h-sub">ศูนย์รวมการเงินธุรกิจของคุณ</div>
+        </div>
+
+        <div class="summary">
+          <div class="sum-card tinted unpaid">
+            <div class="sum-label">ค้างจ่าย</div>
+            <div class="sum-value">${fmt(c.totalUnpaid)}</div>
+          </div>
+          <div class="sum-card tinted monthly">
+            <div class="sum-label">ต่อเดือน</div>
+            <div class="sum-value">${fmt(c.totalMonthly)}</div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab-row">
+            <button class="tab ${state.tab === 'overview' ? 'active' : ''}" onclick="setTab('overview')">ใกล้ครบกำหนด</button>
+            <button class="tab ${state.tab === 'businesses' ? 'active' : ''}" onclick="setTab('businesses')">ธุรกิจของฉัน</button>
+          </div>
+        </div>
+
+        <div class="content">
+          ${state.tab === 'overview' ? renderOverview(c.upcoming) : renderBusinesses()}
+        </div>
+
+        <button class="fab" onclick="openBizModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          เพิ่มธุรกิจ
+        </button>
+      `;
+    };
+
+    const avatarHTML = (biz, size = 'sm') => {
+      const cls = size === 'lg' ? 'biz-avatar-lg' : 'biz-avatar';
+      if (biz && biz.image) {
+        return `<div class="${cls}"><img src="${biz.image}" alt=""/></div>`;
+      }
+      const bg = (biz && biz.color) || '#C9F0DC';
+      const icon = (biz && biz.icon) || (biz && biz.name ? biz.name.trim().charAt(0).toUpperCase() : '?');
+      return `<div class="${cls}" style="background: ${bg}">${escapeHtml(icon)}</div>`;
+    };
+
+    const renderOverview = (upcoming) => {
+      if (upcoming.length === 0) {
+        return `<div class="empty"><div class="empty-icon">✨</div><div class="empty-title">ทุกอย่างเรียบร้อยแล้ว</div><div class="empty-sub">ไม่มีรายการค้างจ่าย</div></div>`;
+      }
+      return upcoming.map(e => {
+        const biz = state.businesses.find(b => b.id === e.bizId);
+        const urgent = e.daysUntil <= 3;
+        const warning = e.daysUntil <= 7 && !urgent;
+        const cls = urgent ? 'urgent' : warning ? 'warning' : '';
+        const dayCls = urgent ? 'urgent' : warning ? 'warning' : 'normal';
+        const dayText = e.daysUntil === 0 ? 'วันนี้' : `อีก ${e.daysUntil} วัน`;
+        return `
+          <div class="exp-card ${cls}">
+            ${avatarHTML(biz)}
+            <div class="exp-info">
+              <div class="exp-biz-name">${escapeHtml(e.bizName)}</div>
+              <div class="exp-name">${escapeHtml(e.name)}</div>
+              <div class="exp-meta">
+                <span>วันที่ ${e.dueDay}</span>
+                <span class="badge-day ${dayCls}">${dayText}</span>
+              </div>
+            </div>
+            <div class="exp-amount">
+              <div class="exp-price">${fmt(e.amount)}</div>
+              <button class="pay-btn" onclick="togglePaid('${e.bizId}','${e.id}')">จ่ายแล้ว</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    const renderBusinesses = () => {
+      if (state.businesses.length === 0) {
+        return `<div class="empty"><div class="empty-icon">🌿</div><div class="empty-title">ยังไม่มีธุรกิจ</div><div class="empty-sub">กดปุ่มด้านล่างเพื่อเริ่ม</div></div>`;
+      }
+      return state.businesses.map(biz => {
+        const total = biz.expenses.reduce((s,e) => s + e.amount, 0);
+        const unpaid = biz.expenses.filter(e => !e.paid).reduce((s,e) => s + e.amount, 0);
+        return `
+          <div class="biz-card">
+            <div class="biz-header">
+              ${avatarHTML(biz, 'lg')}
+              <div class="biz-title">
+                <div class="biz-name">${escapeHtml(biz.name)}</div>
+                ${biz.note ? `<div class="biz-note">${escapeHtml(biz.note)}</div>` : ''}
+              </div>
+              <div class="biz-actions">
+                <button class="icon-btn" onclick="editBiz('${biz.id}')" aria-label="แก้ไข">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                </button>
+                <button class="icon-btn danger" onclick="deleteBiz('${biz.id}')" aria-label="ลบ">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="biz-stats">
+              <div class="stat-item"><div class="stat-label">รวม</div><div class="stat-value">${fmt(total)}</div></div>
+              <div class="stat-item"><div class="stat-label">ค้างจ่าย</div><div class="stat-value unpaid">${fmt(unpaid)}</div></div>
+            </div>
+            ${biz.expenses.length > 0 ? `
+              <div class="exp-list">
+                ${biz.expenses.map(e => `
+                  <div class="exp-row">
+                    <div class="check ${e.paid ? 'checked' : ''}" onclick="togglePaid('${biz.id}','${e.id}')">${e.paid ? '✓' : ''}</div>
+                    <div class="exp-row-info">
+                      <div class="exp-row-name ${e.paid ? 'paid' : ''}">${escapeHtml(e.name)}</div>
+                      <div class="exp-row-meta">วันที่ ${e.dueDay} · ${e.frequency === 'monthly' ? 'รายเดือน' : 'รายปี'}</div>
+                    </div>
+                    <div class="exp-row-price ${e.paid ? 'paid' : ''}">${fmt(e.amount)}</div>
+                    <button class="x-btn" onclick="deleteExp('${biz.id}','${e.id}')">×</button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+            <button class="add-exp" onclick="openExpModal('${biz.id}')">+ เพิ่มรายการจ่าย</button>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // ===== Actions =====
+    window.setTab = (t) => { state.tab = t; render(); };
+
+    window.togglePaid = (bizId, expId) => {
+      const biz = state.businesses.find(b => b.id === bizId);
+      if (!biz) return;
+      const exp = biz.expenses.find(e => e.id === expId);
+      if (!exp) return;
+      exp.paid = !exp.paid;
+      save(); render();
+    };
+
+    window.deleteExp = (bizId, expId) => {
+      if (!confirm('ลบรายการนี้?')) return;
+      const biz = state.businesses.find(b => b.id === bizId);
+      if (!biz) return;
+      biz.expenses = biz.expenses.filter(e => e.id !== expId);
+      save(); render();
+    };
+
+    window.deleteBiz = (id) => {
+      if (!confirm('ลบธุรกิจนี้และรายการทั้งหมด?')) return;
+      state.businesses = state.businesses.filter(b => b.id !== id);
+      save(); render();
+    };
+
+    window.editBiz = (id) => {
+      const biz = state.businesses.find(b => b.id === id);
+      if (biz) openBizModal(biz);
+    };
+
+    // ===== Modal: Business =====
+    let editingBiz = null;
+    let tempImage = null;
+    let tempColor = PASTELS[3].bg;
+    let tempIcon = '';
+
+    const ICONS = ['☕','🍔','🍕','🛍️','💄','💼','🏪','🏠','🚗','📱','💻','📚','🌸','🎨','✂️','🍰','🥗','🐶','🌿','💎','🎮','🎵','📦','🏋️'];
+
+    window.openBizModal = (biz) => {
+      editingBiz = biz || null;
+      tempImage = biz?.image || null;
+      tempColor = biz?.color || PASTELS[3].bg;
+      tempIcon = biz?.icon || '';
+      const modal = document.createElement('div');
+      modal.className = 'modal-bg';
+      modal.id = 'biz-modal';
+      modal.onclick = (e) => { if (e.target === modal) closeBizModal(); };
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="grab"></div>
+          <h2 class="serif">${biz ? 'แก้ไขธุรกิจ' : 'ธุรกิจใหม่'}</h2>
+
+          <div class="field">
+            <label class="label">รูปธุรกิจ (ไม่บังคับ)</label>
+            <div class="image-picker">
+              <div class="image-preview" id="img-preview" style="background:${tempColor}">
+                ${tempImage ? `<img src="${tempImage}"/>` : (tempIcon || (biz?.name?.[0]?.toUpperCase() || '?'))}
+              </div>
+              <button class="pick-btn" onclick="document.getElementById('file-input').click()">เลือกรูปจากคลัง</button>
+              ${tempImage ? `<button class="clear-btn" onclick="clearImage()">ลบ</button>` : ''}
+            </div>
+            <input type="file" id="file-input" accept="image/*" onchange="handleImage(event)" />
+          </div>
+
+          ${!tempImage ? `
+          <div class="field">
+            <label class="label">หรือเลือกไอคอน</label>
+            <div class="icon-grid" id="icon-grid">
+              ${ICONS.map(ic => `
+                <div class="icon-pick ${ic === tempIcon ? 'selected' : ''}" onclick="pickIcon('${ic}')">${ic}</div>
+              `).join('')}
+            </div>
+          </div>
+          ` : ''}
+
+          <div class="field">
+            <label class="label">ชื่อธุรกิจ</label>
+            <input class="input" id="biz-name" value="${escapeHtml(biz?.name || '')}" placeholder="เช่น ร้านกาแฟ" />
+          </div>
+
+          <div class="field">
+            <label class="label">สีพื้นหลัง</label>
+            <div class="color-row" id="color-row">
+              ${PASTELS.map(p => `
+                <div class="color-dot ${p.bg === tempColor ? 'selected' : ''}" style="background:${p.bg}" onclick="pickColor('${p.bg}')"></div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">หมายเหตุ (ไม่บังคับ)</label>
+            <input class="input" id="biz-note" value="${escapeHtml(biz?.note || '')}" placeholder="คำอธิบายสั้นๆ" />
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeBizModal()">ยกเลิก</button>
+            <button class="btn btn-confirm" onclick="saveBiz()">${biz ? 'บันทึก' : 'เพิ่ม'}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.pickIcon = (ic) => {
+      tempIcon = (tempIcon === ic) ? '' : ic;
+      document.querySelectorAll('#icon-grid .icon-pick').forEach(el => {
+        el.classList.toggle('selected', el.textContent === tempIcon);
+      });
+      const preview = document.getElementById('img-preview');
+      if (preview && !tempImage) {
+        const name = document.getElementById('biz-name')?.value || '';
+        preview.textContent = tempIcon || (name[0]?.toUpperCase() || '?');
+      }
+    };
+
+    window.closeBizModal = () => {
+      const m = document.getElementById('biz-modal');
+      if (m) m.remove();
+      editingBiz = null; tempImage = null;
+    };
+
+    window.handleImage = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        // Resize to keep storage small
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const max = 240;
+          let w = img.width, h = img.height;
+          if (w > h) { if (w > max) { h = h * max / w; w = max; } }
+          else { if (h > max) { w = w * max / h; h = max; } }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          tempImage = canvas.toDataURL('image/jpeg', 0.82);
+          document.getElementById('img-preview').innerHTML = `<img src="${tempImage}"/>`;
+          // Re-render modal to show clear button
+          const editingTemp = editingBiz;
+          closeBizModal();
+          openBizModal(editingTemp);
+          // Restore
+          if (editingTemp) {
+            // already restored via openBizModal
+          }
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.clearImage = () => {
+      tempImage = null;
+      const editingTemp = editingBiz;
+      closeBizModal();
+      openBizModal(editingTemp);
+    };
+
+    window.pickColor = (color) => {
+      tempColor = color;
+      document.querySelectorAll('#color-row .color-dot').forEach(d => {
+        d.classList.toggle('selected', d.style.background.includes(color.toLowerCase()) || d.style.backgroundColor === color);
+      });
+      // Simpler: re-apply
+      document.querySelectorAll('#color-row .color-dot').forEach((d, i) => {
+        d.classList.toggle('selected', PASTELS[i].bg === color);
+      });
+      const preview = document.getElementById('img-preview');
+      if (preview && !tempImage) preview.style.background = color;
+    };
+
+    window.saveBiz = () => {
+      const name = document.getElementById('biz-name').value.trim();
+      if (!name) { alert('กรุณาใส่ชื่อธุรกิจ'); return; }
+      const note = document.getElementById('biz-note').value.trim();
+
+      if (editingBiz) {
+        editingBiz.name = name;
+        editingBiz.color = tempColor;
+        editingBiz.image = tempImage;
+        editingBiz.icon = tempIcon;
+        editingBiz.note = note;
+      } else {
+        state.businesses.push({
+          id: Date.now().toString(),
+          name, color: tempColor, image: tempImage, icon: tempIcon, note,
+          expenses: [], createdAt: new Date().toISOString(),
+        });
+      }
+      save();
+      closeBizModal();
+      render();
+    };
+
+    // ===== Modal: Expense =====
+    let expBizId = null;
+    let expFreq = 'monthly';
+
+    window.openExpModal = (bizId) => {
+      expBizId = bizId;
+      expFreq = 'monthly';
+      const modal = document.createElement('div');
+      modal.className = 'modal-bg';
+      modal.id = 'exp-modal';
+      modal.onclick = (e) => { if (e.target === modal) closeExpModal(); };
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="grab"></div>
+          <h2 class="serif">รายการจ่ายใหม่</h2>
+
+          <div class="field">
+            <label class="label">รายการ</label>
+            <input class="input" id="exp-name" placeholder="เช่น ค่าเช่า, ค่าไฟ" />
+          </div>
+
+          <div class="row-2">
+            <div class="field">
+              <label class="label">จำนวนเงิน (฿)</label>
+              <input class="input" type="number" inputmode="decimal" id="exp-amount" placeholder="0" />
+            </div>
+            <div class="field">
+              <label class="label">วันที่ครบกำหนด</label>
+              <input class="input" type="number" inputmode="numeric" min="1" max="31" id="exp-day" placeholder="1-31" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">ความถี่</label>
+            <div class="freq-row">
+              <button class="freq-btn active" id="freq-monthly" onclick="pickFreq('monthly')">รายเดือน</button>
+              <button class="freq-btn" id="freq-yearly" onclick="pickFreq('yearly')">รายปี</button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeExpModal()">ยกเลิก</button>
+            <button class="btn btn-confirm" onclick="saveExp()">เพิ่ม</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      setTimeout(() => document.getElementById('exp-name').focus(), 200);
+    };
+
+    window.closeExpModal = () => {
+      const m = document.getElementById('exp-modal');
+      if (m) m.remove();
+      expBizId = null;
+    };
+
+    window.pickFreq = (f) => {
+      expFreq = f;
+      document.getElementById('freq-monthly').classList.toggle('active', f === 'monthly');
+      document.getElementById('freq-yearly').classList.toggle('active', f === 'yearly');
+    };
+
+    window.saveExp = () => {
+      const name = document.getElementById('exp-name').value.trim();
+      const amount = parseFloat(document.getElementById('exp-amount').value);
+      const day = parseInt(document.getElementById('exp-day').value);
+      if (!name) return alert('ใส่ชื่อรายการ');
+      if (isNaN(amount) || amount <= 0) return alert('ใส่จำนวนเงิน');
+      if (isNaN(day) || day < 1 || day > 31) return alert('ใส่วันที่ 1-31');
+
+      const biz = state.businesses.find(b => b.id === expBizId);
+      if (!biz) return;
+      biz.expenses.push({
+        id: Date.now().toString(),
+        name, amount, dueDay: day, frequency: expFreq, paid: false,
+      });
+      save();
+      closeExpModal();
+      render();
+    };
+
+    // Init
+    load();
+    render();
+  </script>
+</body>
+</html>
