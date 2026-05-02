@@ -286,6 +286,102 @@ border: 1.5px solid transparent;
 }
 .month-pick.selected { background: #1A1A1A; color: white; border-color: #1A1A1A; }
 
+/* Pie chart */
+.chart-section { padding: 0 20px; margin-bottom: 20px; }
+.chart-card {
+background: white; border: 1px solid var(–line); border-radius: 24px;
+padding: 20px; position: relative; overflow: hidden;
+}
+.chart-title {
+font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+color: var(–muted); font-weight: 600; margin-bottom: 16px; text-align: center;
+}
+.chart-wrap {
+display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.chart-svg-wrap { position: relative; width: 200px; height: 200px; }
+.chart-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.chart-center {
+position: absolute; inset: 0;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+pointer-events: none;
+}
+.chart-center-label {
+font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+color: var(–muted); font-weight: 600;
+}
+.chart-center-value {
+font-size: 22px; font-weight: 700; margin-top: 2px; letter-spacing: -0.02em;
+}
+.chart-empty {
+width: 200px; height: 200px; border-radius: 50%;
+border: 12px solid #F1F0EA; display: flex; align-items: center; justify-content: center;
+color: var(–muted); font-size: 14px; text-align: center; padding: 20px;
+}
+
+.chart-legend { width: 100%; margin-top: 4px; }
+.legend-item {
+display: flex; align-items: center; gap: 10px;
+padding: 8px 0; border-bottom: 1px solid #F5F4EE;
+}
+.legend-item:last-child { border-bottom: none; }
+.legend-dot {
+width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0;
+}
+.legend-name { flex: 1; font-size: 14px; font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legend-pct { font-size: 13px; color: var(–muted); font-weight: 600; min-width: 44px; text-align: right; }
+.legend-amount { font-size: 13px; color: var(–text); font-weight: 600; min-width: 80px; text-align: right; }
+
+/* Summary section */
+.totals-card {
+background: white; border: 1px solid var(–line); border-radius: 24px;
+padding: 18px; margin: 0 20px 16px;
+}
+.totals-row {
+display: flex; justify-content: space-between; align-items: center;
+padding: 10px 0; border-bottom: 1px solid #F5F4EE;
+}
+.totals-row:last-child { border-bottom: none; padding-top: 14px; }
+.totals-row.net { border-top: 2px solid #1A1A1A; margin-top: 6px; }
+.totals-label { display: flex; align-items: center; gap: 10px; }
+.totals-icon {
+width: 36px; height: 36px; border-radius: 12px; display: flex;
+align-items: center; justify-content: center; font-size: 16px;
+}
+.totals-icon.income { background: #C9F0DC; }
+.totals-icon.expense { background: #FFD6D6; }
+.totals-icon.net-pos { background: #C9E4F5; }
+.totals-icon.net-neg { background: #FFE2C9; }
+.totals-name { font-size: 14px; font-weight: 600; }
+.totals-value { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.totals-value.income { color: #2A8050; }
+.totals-value.expense { color: #B43030; }
+.totals-value.net-pos { color: #1E5F8C; }
+.totals-value.net-neg { color: #B45A0A; }
+.totals-pct { font-size: 11px; color: var(–muted); margin-top: 2px; font-weight: 500; }
+
+/* Income list inside biz card */
+.income-section {
+margin: 6px 16px; padding-top: 8px; border-top: 1px dashed #E5E4DE;
+}
+.income-row {
+display: flex; gap: 10px; align-items: center; padding: 10px 12px;
+background: #F0F9F4; border-radius: 12px; margin-bottom: 6px;
+border: 1px solid #DDF0E5;
+}
+.income-icon-mini {
+width: 22px; height: 22px; border-radius: 50%;
+background: #C9F0DC; color: #2A8050;
+display: flex; align-items: center; justify-content: center;
+font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+.add-income {
+margin: 0 16px 12px; padding: 12px; border: 1.5px dashed #C9E4D2;
+border-radius: 14px; background: #F8FCFA; color: #2A8050;
+font-family: inherit; font-size: 13px; cursor: pointer; width: calc(100% - 32px);
+font-weight: 500;
+}
+
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .btn {
 flex: 1; padding: 14px; border-radius: 14px; border: none;
@@ -311,7 +407,7 @@ input[type=number] { -moz-appearance: textfield; }
   <script>
     // ===== Storage =====
     const STORAGE_KEY = 'businessHub_v1';
-    let state = { businesses: [], tab: 'overview' };
+    let state = { businesses: [], tab: 'summary' };
 
     const load = () => {
       try {
@@ -320,6 +416,7 @@ input[type=number] { -moz-appearance: textfield; }
           state.businesses = JSON.parse(raw);
           // Migration: old "paid" bool -> paidHistory array
           state.businesses.forEach(b => {
+            if (!b.incomes) b.incomes = [];
             (b.expenses || []).forEach(e => {
               if (!e.paidHistory) e.paidHistory = [];
               // If old data had paid=true, mark this current cycle as paid
@@ -429,26 +526,18 @@ input[type=number] { -moz-appearance: textfield; }
           <div class="h-sub">ศูนย์รวมการเงินธุรกิจของคุณ</div>
         </div>
 
-        <div class="summary">
-          <div class="sum-card tinted unpaid">
-            <div class="sum-label">ค้างจ่าย</div>
-            <div class="sum-value">${fmt(c.totalUnpaid)}</div>
-          </div>
-          <div class="sum-card tinted monthly">
-            <div class="sum-label">ต่อเดือน</div>
-            <div class="sum-value">${fmt(c.totalMonthly)}</div>
-          </div>
-        </div>
-
         <div class="tabs">
           <div class="tab-row">
-            <button class="tab ${state.tab === 'overview' ? 'active' : ''}" onclick="setTab('overview')">ใกล้ครบกำหนด</button>
-            <button class="tab ${state.tab === 'businesses' ? 'active' : ''}" onclick="setTab('businesses')">ธุรกิจของฉัน</button>
+            <button class="tab ${state.tab === 'summary' ? 'active' : ''}" onclick="setTab('summary')">ภาพรวม</button>
+            <button class="tab ${state.tab === 'overview' ? 'active' : ''}" onclick="setTab('overview')">ครบกำหนด</button>
+            <button class="tab ${state.tab === 'businesses' ? 'active' : ''}" onclick="setTab('businesses')">ธุรกิจ</button>
           </div>
         </div>
 
         <div class="content">
-          ${state.tab === 'overview' ? renderOverview(c.upcoming) : renderBusinesses()}
+          ${state.tab === 'summary' ? renderSummary(c) : ''}
+          ${state.tab === 'overview' ? renderOverview(c.upcoming) : ''}
+          ${state.tab === 'businesses' ? renderBusinesses() : ''}
         </div>
 
         <button class="fab" onclick="openBizModal()">
@@ -466,6 +555,165 @@ input[type=number] { -moz-appearance: textfield; }
       const bg = (biz && biz.color) || '#C9F0DC';
       const icon = (biz && biz.icon) || (biz && biz.name ? biz.name.trim().charAt(0).toUpperCase() : '?');
       return `<div class="${cls}" style="background: ${bg}">${escapeHtml(icon)}</div>`;
+    };
+
+    // Generate SVG pie chart
+    const renderPieChart = (segments, totalValue) => {
+      if (segments.length === 0 || totalValue === 0) {
+        return `<div class="chart-empty">ยังไม่มีข้อมูลรายจ่าย</div>`;
+      }
+      const cx = 100, cy = 100, r = 80, sw = 24;
+      // If only one segment with 100%, draw full circle
+      if (segments.length === 1) {
+        return `
+          <svg class="chart-svg" viewBox="0 0 200 200">
+            <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+              stroke="${segments[0].color}" stroke-width="${sw}"/>
+          </svg>
+        `;
+      }
+      let cumulative = 0;
+      const circumference = 2 * Math.PI * r;
+      const arcs = segments.map(seg => {
+        const dashLength = (seg.value / totalValue) * circumference;
+        const dashOffset = -cumulative;
+        cumulative += dashLength;
+        const arc = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+          stroke="${seg.color}" stroke-width="${sw}"
+          stroke-dasharray="${dashLength} ${circumference - dashLength}"
+          stroke-dashoffset="${dashOffset}"/>`;
+        return arc;
+      }).join('');
+      return `<svg class="chart-svg" viewBox="0 0 200 200">${arcs}</svg>`;
+    };
+
+    const renderSummary = (c) => {
+      // Build per-business expense totals (using monthly equivalent)
+      const bizSegments = state.businesses.map(b => {
+        const monthlyExp = b.expenses
+          .filter(e => e.frequency === 'monthly')
+          .reduce((s, e) => s + e.amount, 0);
+        const yearlyExp = b.expenses
+          .filter(e => e.frequency === 'yearly')
+          .reduce((s, e) => s + e.amount, 0);
+        // Convert yearly to monthly equivalent for fair pie chart
+        const monthlyEquiv = monthlyExp + (yearlyExp / 12);
+        return {
+          id: b.id,
+          name: b.name,
+          color: b.color || '#C9F0DC',
+          value: monthlyEquiv,
+          rawMonthly: monthlyExp,
+          rawYearly: yearlyExp,
+        };
+      }).filter(s => s.value > 0).sort((a, b) => b.value - a.value);
+
+      const totalExpense = bizSegments.reduce((s, x) => s + x.value, 0);
+
+      // Income totals
+      const totalIncome = state.businesses.reduce((s, b) => {
+        return s + (b.incomes || []).reduce((ss, i) => {
+          if (i.frequency === 'monthly') return ss + i.amount;
+          if (i.frequency === 'yearly') return ss + (i.amount / 12);
+          return ss;
+        }, 0);
+      }, 0);
+
+      const net = totalIncome - totalExpense;
+      const profitPct = totalIncome > 0 ? (net / totalIncome) * 100 : 0;
+      const expensePct = totalIncome > 0 ? (totalExpense / totalIncome) * 100 : 0;
+
+      return `
+        <div class="summary">
+          <div class="sum-card tinted unpaid">
+            <div class="sum-label">ค้างจ่าย</div>
+            <div class="sum-value">${fmt(c.totalUnpaid)}</div>
+          </div>
+          <div class="sum-card tinted monthly">
+            <div class="sum-label">ต่อเดือน</div>
+            <div class="sum-value">${fmt(c.totalMonthly)}</div>
+          </div>
+        </div>
+
+        <div class="chart-section" style="margin-top:16px">
+          <div class="chart-card">
+            <div class="chart-title">รายจ่ายแต่ละธุรกิจ · ต่อเดือน</div>
+            <div class="chart-wrap">
+              <div class="chart-svg-wrap">
+                ${renderPieChart(bizSegments, totalExpense)}
+                ${totalExpense > 0 ? `
+                  <div class="chart-center">
+                    <div class="chart-center-label">รวม</div>
+                    <div class="chart-center-value">${fmt(totalExpense)}</div>
+                  </div>
+                ` : ''}
+              </div>
+              ${bizSegments.length > 0 ? `
+                <div class="chart-legend">
+                  ${bizSegments.map(s => {
+                    const pct = totalExpense > 0 ? (s.value / totalExpense * 100) : 0;
+                    return `
+                    <div class="legend-item">
+                      <div class="legend-dot" style="background:${s.color}"></div>
+                      <div class="legend-name">${escapeHtml(s.name)}</div>
+                      <div class="legend-pct">${pct.toFixed(1)}%</div>
+                      <div class="legend-amount">${fmt(s.value)}</div>
+                    </div>
+                  `}).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+
+        <div class="totals-card">
+          <div class="totals-row">
+            <div class="totals-label">
+              <div class="totals-icon income">↑</div>
+              <div>
+                <div class="totals-name">รายรับรวม</div>
+                <div class="totals-pct">ต่อเดือน</div>
+              </div>
+            </div>
+            <div class="totals-value income">${fmt(totalIncome)}</div>
+          </div>
+          <div class="totals-row">
+            <div class="totals-label">
+              <div class="totals-icon expense">↓</div>
+              <div>
+                <div class="totals-name">รายจ่ายรวม</div>
+                <div class="totals-pct">${totalIncome > 0 ? expensePct.toFixed(1) + '% ของรายรับ' : 'ต่อเดือน'}</div>
+              </div>
+            </div>
+            <div class="totals-value expense">${fmt(totalExpense)}</div>
+          </div>
+          <div class="totals-row net">
+            <div class="totals-label">
+              <div class="totals-icon ${net >= 0 ? 'net-pos' : 'net-neg'}">${net >= 0 ? '✓' : '!'}</div>
+              <div>
+                <div class="totals-name">${net >= 0 ? 'กำไรสุทธิ' : 'ขาดทุน'}</div>
+                <div class="totals-pct">${totalIncome > 0 ? Math.abs(profitPct).toFixed(1) + '% ของรายรับ' : ''}</div>
+              </div>
+            </div>
+            <div class="totals-value ${net >= 0 ? 'net-pos' : 'net-neg'}">${fmt(Math.abs(net))}</div>
+          </div>
+        </div>
+
+        ${c.totalUnpaid > 0 ? `
+          <div class="totals-card" style="background: linear-gradient(135deg, #FFF5F5 0%, #FFE7E7 100%); border-color: #FFB4B4;">
+            <div class="totals-row" style="border: none; padding: 4px 0;">
+              <div class="totals-label">
+                <div class="totals-icon expense">⏰</div>
+                <div>
+                  <div class="totals-name">ค้างจ่ายตอนนี้</div>
+                  <div class="totals-pct">${c.upcoming.length} รายการ</div>
+                </div>
+              </div>
+              <div class="totals-value expense">${fmt(c.totalUnpaid)}</div>
+            </div>
+          </div>
+        ` : ''}
+      `;
     };
 
     const renderOverview = (upcoming) => {
@@ -565,6 +813,23 @@ input[type=number] { -moz-appearance: textfield; }
               </div>
             ` : ''}
             <button class="add-exp" onclick="openExpModal('${biz.id}')">+ เพิ่มรายการจ่าย</button>
+
+            ${(biz.incomes || []).length > 0 ? `
+              <div class="income-section">
+                ${biz.incomes.map(i => `
+                  <div class="income-row">
+                    <div class="income-icon-mini">↑</div>
+                    <div class="exp-row-info" onclick="openIncomeModal('${biz.id}','${i.id}')">
+                      <div class="exp-row-name">${escapeHtml(i.name)}</div>
+                      <div class="exp-row-meta">${i.frequency === 'monthly' ? 'รายรับต่อเดือน' : 'รายรับต่อปี'}</div>
+                    </div>
+                    <div class="exp-row-price" style="color:#2A8050">${fmt(i.amount)}</div>
+                    <button class="x-btn" onclick="deleteIncome('${biz.id}','${i.id}')">×</button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+            <button class="add-income" onclick="openIncomeModal('${biz.id}')">+ เพิ่มรายรับ</button>
           </div>
         `;
       }).join('');
@@ -913,6 +1178,111 @@ input[type=number] { -moz-appearance: textfield; }
       save();
       closeExpModal();
       render();
+    };
+
+    // ===== Modal: Income =====
+    let incBizId = null;
+    let incFreq = 'monthly';
+    let editingIncome = null;
+
+    window.openIncomeModal = (bizId, incId) => {
+      incBizId = bizId;
+      editingIncome = null;
+      incFreq = 'monthly';
+      let presetName = '', presetAmount = '';
+
+      if (incId) {
+        const biz = state.businesses.find(b => b.id === bizId);
+        const inc = (biz?.incomes || []).find(i => i.id === incId);
+        if (inc) {
+          editingIncome = inc;
+          incFreq = inc.frequency;
+          presetName = inc.name;
+          presetAmount = inc.amount;
+        }
+      }
+
+      const modal = document.createElement('div');
+      modal.className = 'modal-bg';
+      modal.id = 'inc-modal';
+      modal.onclick = (e) => { if (e.target === modal) closeIncomeModal(); };
+      modal.innerHTML = `
+        <div class="modal">
+          <div class="grab"></div>
+          <h2 class="serif" style="color:#2A8050">${editingIncome ? 'แก้ไขรายรับ' : 'เพิ่มรายรับ'}</h2>
+
+          <div class="field">
+            <label class="label">รายการ</label>
+            <input class="input" id="inc-name" value="${escapeHtml(presetName)}" placeholder="เช่น ยอดขาย, ค่าเช่ารับ" />
+          </div>
+
+          <div class="field">
+            <label class="label">จำนวนเงิน (฿)</label>
+            <input class="input" type="number" inputmode="decimal" id="inc-amount" value="${presetAmount}" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label class="label">ความถี่</label>
+            <div class="freq-row">
+              <button class="freq-btn ${incFreq === 'monthly' ? 'active' : ''}" id="inc-freq-monthly" onclick="pickIncFreq('monthly')">รายเดือน</button>
+              <button class="freq-btn ${incFreq === 'yearly' ? 'active' : ''}" id="inc-freq-yearly" onclick="pickIncFreq('yearly')">รายปี</button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeIncomeModal()">ยกเลิก</button>
+            <button class="btn btn-confirm" style="background:#2A8050" onclick="saveIncome()">${editingIncome ? 'บันทึก' : 'เพิ่ม'}</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      if (!editingIncome) setTimeout(() => document.getElementById('inc-name').focus(), 200);
+    };
+
+    window.closeIncomeModal = () => {
+      const m = document.getElementById('inc-modal');
+      if (m) m.remove();
+      incBizId = null;
+      editingIncome = null;
+    };
+
+    window.pickIncFreq = (f) => {
+      incFreq = f;
+      document.getElementById('inc-freq-monthly').classList.toggle('active', f === 'monthly');
+      document.getElementById('inc-freq-yearly').classList.toggle('active', f === 'yearly');
+    };
+
+    window.saveIncome = () => {
+      const name = document.getElementById('inc-name').value.trim();
+      const amount = parseFloat(document.getElementById('inc-amount').value);
+      if (!name) return alert('ใส่ชื่อรายการ');
+      if (isNaN(amount) || amount <= 0) return alert('ใส่จำนวนเงิน');
+
+      const biz = state.businesses.find(b => b.id === incBizId);
+      if (!biz) return;
+      if (!biz.incomes) biz.incomes = [];
+
+      if (editingIncome) {
+        editingIncome.name = name;
+        editingIncome.amount = amount;
+        editingIncome.frequency = incFreq;
+      } else {
+        biz.incomes.push({
+          id: Date.now().toString(),
+          name, amount, frequency: incFreq,
+        });
+      }
+      save();
+      closeIncomeModal();
+      render();
+    };
+
+    window.deleteIncome = (bizId, incId) => {
+      if (!confirm('ลบรายรับนี้?')) return;
+      const biz = state.businesses.find(b => b.id === bizId);
+      if (!biz || !biz.incomes) return;
+      biz.incomes = biz.incomes.filter(i => i.id !== incId);
+      save(); render();
     };
 
     // Init
