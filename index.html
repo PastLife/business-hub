@@ -257,10 +257,10 @@ background: white; font-family: inherit; font-size: 12px; color: var(–muted);
 cursor: pointer;
 }
 
-.freq-row { display: flex; gap: 8px; }
+.freq-row { display: flex; gap: 6px; }
 .freq-btn {
-flex: 1; padding: 11px; border-radius: 12px; border: 1.5px solid var(–line);
-background: white; font-family: inherit; font-size: 14px; color: var(–muted);
+flex: 1; padding: 11px 6px; border-radius: 12px; border: 1.5px solid var(–line);
+background: white; font-family: inherit; font-size: 13px; color: var(–muted);
 cursor: pointer; font-weight: 500;
 }
 .freq-btn.active { border-color: #1A1A1A; background: #1A1A1A; color: white; }
@@ -285,6 +285,17 @@ background: #F5F4EE; color: #4A4A45; transition: all 0.15s;
 border: 1.5px solid transparent;
 }
 .month-pick.selected { background: #1A1A1A; color: white; border-color: #1A1A1A; }
+
+.weekday-grid {
+display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+}
+.weekday-pick {
+padding: 12px 4px; text-align: center; border-radius: 10px;
+font-size: 13px; font-weight: 500; cursor: pointer;
+background: #F5F4EE; color: #4A4A45; transition: all 0.15s;
+border: 1.5px solid transparent;
+}
+.weekday-pick.selected { background: #1A1A1A; color: white; border-color: #1A1A1A; }
 
 /* Pie chart */
 .chart-section { padding: 0 20px; margin-bottom: 20px; }
@@ -337,23 +348,37 @@ width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0;
 background: white; border: 1px solid var(–line); border-radius: 24px;
 padding: 18px; margin: 0 20px 16px;
 }
+.totals-header { padding-bottom: 12px; border-bottom: 1px solid #F5F4EE; margin-bottom: 6px; }
+.totals-header-label {
+font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+color: var(–muted); font-weight: 600; text-align: center;
+}
 .totals-row {
 display: flex; justify-content: space-between; align-items: center;
 padding: 10px 0; border-bottom: 1px solid #F5F4EE;
 }
+.totals-row.compact { border-bottom: none; padding: 8px 0; }
+.totals-row.minus { padding-bottom: 12px; }
 .totals-row:last-child { border-bottom: none; padding-top: 14px; }
 .totals-row.net { border-top: 2px solid #1A1A1A; margin-top: 6px; }
+.totals-row.net-row { padding: 14px 0 4px; }
+.totals-divider {
+height: 2px; background: #1A1A1A; margin: 6px 0 0;
+border-radius: 2px;
+}
 .totals-label { display: flex; align-items: center; gap: 10px; }
 .totals-icon {
 width: 36px; height: 36px; border-radius: 12px; display: flex;
-align-items: center; justify-content: center; font-size: 16px;
+align-items: center; justify-content: center; font-size: 16px; font-weight: 700;
 }
-.totals-icon.income { background: #C9F0DC; }
-.totals-icon.expense { background: #FFD6D6; }
-.totals-icon.net-pos { background: #C9E4F5; }
-.totals-icon.net-neg { background: #FFE2C9; }
+.totals-icon.income { background: #C9F0DC; color: #2A8050; }
+.totals-icon.expense { background: #FFD6D6; color: #B43030; }
+.totals-icon.net-pos { background: #C9E4F5; color: #1E5F8C; }
+.totals-icon.net-neg { background: #FFE2C9; color: #B45A0A; }
 .totals-name { font-size: 14px; font-weight: 600; }
+.totals-name.big { font-size: 16px; }
 .totals-value { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.totals-value.big { font-size: 24px; }
 .totals-value.income { color: #2A8050; }
 .totals-value.expense { color: #B43030; }
 .totals-value.net-pos { color: #1E5F8C; }
@@ -381,6 +406,88 @@ border-radius: 14px; background: #F8FCFA; color: #2A8050;
 font-family: inherit; font-size: 13px; cursor: pointer; width: calc(100% - 32px);
 font-weight: 500;
 }
+
+/* Item icons in unified list */
+.item-icon {
+width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+font-size: 13px; font-weight: 700;
+}
+.item-icon.expense-icon { background: #FFD6D6; color: #B43030; }
+.item-icon.income-icon { background: #C9F0DC; color: #2A8050; }
+.check-spacer { width: 22px; flex-shrink: 0; }
+.income-item { background: #F8FCF9 !important; border: 1px solid #DDF0E5; }
+
+/* Kind selector (income/expense) */
+.kind-row { display: flex; gap: 8px; }
+.kind-btn {
+flex: 1; padding: 14px 8px; border-radius: 14px; border: 1.5px solid var(–line);
+background: white; font-family: inherit; font-size: 15px; color: var(–muted);
+cursor: pointer; font-weight: 600; display: flex; align-items: center;
+justify-content: center; gap: 8px;
+}
+.kind-btn .kind-ic {
+width: 22px; height: 22px; border-radius: 50%;
+display: inline-flex; align-items: center; justify-content: center;
+background: #F1F0EA; font-size: 12px; font-weight: 700;
+}
+.kind-btn.active.expense { border-color: #B43030; background: #FFF5F5; color: #B43030; }
+.kind-btn.active.expense .kind-ic { background: #FFD6D6; color: #B43030; }
+.kind-btn.active.income { border-color: #2A8050; background: #F0F9F4; color: #2A8050; }
+.kind-btn.active.income .kind-ic { background: #C9F0DC; color: #2A8050; }
+
+/* Combo item (รายรับ+รายจ่ายในตัวเดียว) */
+.combo-item {
+background: #FAFAF6; border: 1px solid #EDECE6; border-radius: 14px;
+padding: 12px; margin-bottom: 8px;
+}
+.combo-item.paid-item { background: #F5F5F0; opacity: 0.75; }
+.combo-header {
+display: flex; gap: 10px; align-items: center; margin-bottom: 10px;
+}
+.combo-info { flex: 1; min-width: 0; cursor: pointer; }
+.combo-name { font-size: 15px; font-weight: 600; color: var(–text); }
+.combo-name.paid { text-decoration: line-through; color: var(–muted); }
+.combo-meta { font-size: 11px; color: var(–muted); margin-top: 2px; }
+.combo-numbers {
+display: flex; gap: 6px; flex-wrap: wrap;
+}
+.combo-cell {
+flex: 1; min-width: 0; padding: 8px 10px; border-radius: 10px;
+border: 1px solid; text-align: left;
+}
+.combo-cell.income { background: #F0F9F4; border-color: #C9E4D2; }
+.combo-cell.expense { background: #FFF5F5; border-color: #FFD6D6; }
+.combo-cell.profit { background: #EBF3FB; border-color: #C9E4F5; }
+.combo-cell.loss { background: #FFF6EC; border-color: #FFE2C9; }
+.combo-cell-label {
+font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+font-weight: 700; opacity: 0.7;
+}
+.combo-cell.income .combo-cell-label { color: #2A8050; }
+.combo-cell.expense .combo-cell-label { color: #B43030; }
+.combo-cell.profit .combo-cell-label { color: #1E5F8C; }
+.combo-cell.loss .combo-cell-label { color: #B45A0A; }
+.combo-cell-value { font-size: 14px; font-weight: 700; margin-top: 2px; letter-spacing: -0.01em; }
+.combo-cell.income .combo-cell-value { color: #2A8050; }
+.combo-cell.expense .combo-cell-value { color: #B43030; }
+.combo-cell.profit .combo-cell-value { color: #1E5F8C; }
+.combo-cell.loss .combo-cell-value { color: #B45A0A; }
+
+.unpaid-banner {
+margin: 0 16px 10px; padding: 10px 14px;
+background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 100%);
+border: 1px solid #FFB4B4;
+border-radius: 12px; font-size: 13px; color: #B43030; font-weight: 600;
+display: flex; justify-content: space-between; align-items: center;
+}
+
+.hint {
+font-size: 11px; color: var(–muted); margin-top: -8px; margin-bottom: 12px;
+padding: 0 4px; font-style: italic;
+}
+.income-input:focus { border-color: #2A8050 !important; }
+.expense-input:focus { border-color: #B43030 !important; }
 
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .btn {
@@ -414,12 +521,11 @@ input[type=number] { -moz-appearance: textfield; }
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           state.businesses = JSON.parse(raw);
-          // Migration: old "paid" bool -> paidHistory array
+          // Migration
           state.businesses.forEach(b => {
             if (!b.incomes) b.incomes = [];
             (b.expenses || []).forEach(e => {
               if (!e.paidHistory) e.paidHistory = [];
-              // If old data had paid=true, mark this current cycle as paid
               if (e.paid === true && e.paidHistory.length === 0) {
                 const now = new Date();
                 const key = e.frequency === 'monthly'
@@ -429,9 +535,26 @@ input[type=number] { -moz-appearance: textfield; }
               }
               delete e.paid;
               delete e.lastPaidMonth;
-              // Default dueMonth for yearly without one
               if (e.frequency === 'yearly' && !e.dueMonth) e.dueMonth = 1;
+              // New: ensure income/expense amounts exist
+              if (e.incomeAmount === undefined) e.incomeAmount = 0;
+              if (e.amount === undefined) e.amount = 0;
+              // Treat old "amount" as expenseAmount (already named amount)
             });
+            // Migrate old standalone incomes -> as items with only incomeAmount
+            (b.incomes || []).forEach(i => {
+              b.expenses.push({
+                id: i.id || Date.now().toString() + Math.random(),
+                name: i.name,
+                amount: 0,
+                incomeAmount: i.amount,
+                dueDay: 1,
+                frequency: i.frequency,
+                dueMonth: i.frequency === 'yearly' ? 1 : null,
+                paidHistory: [],
+              });
+            });
+            b.incomes = []; // clear old structure
           });
         }
       } catch (e) { console.error(e); }
@@ -464,16 +587,22 @@ input[type=number] { -moz-appearance: textfield; }
 
     const computed = () => {
       const now = new Date();
-      const currentMonth = now.getMonth() + 1; // 1-12
+      const currentMonth = now.getMonth() + 1;
       const currentYear = now.getFullYear();
       const monthKey = `${currentYear}-${String(currentMonth).padStart(2,'0')}`;
       const yearKey = `${currentYear}`;
+      // weekKey: ISO week-ish (year + week number from start of year)
+      const startOfYear = new Date(currentYear, 0, 1);
+      const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+      const weekNum = Math.floor((dayOfYear + startOfYear.getDay()) / 7);
+      const weekKey = `${currentYear}-W${weekNum}`;
 
-      // For each expense, derive "isPaidThisCycle" based on paidHistory
       const annotate = (e, biz) => {
         const paidHistory = e.paidHistory || [];
         let isPaidThisCycle = false;
-        if (e.frequency === 'monthly') {
+        if (e.frequency === 'weekly') {
+          isPaidThisCycle = paidHistory.includes(weekKey);
+        } else if (e.frequency === 'monthly') {
           isPaidThisCycle = paidHistory.includes(monthKey);
         } else {
           isPaidThisCycle = paidHistory.includes(yearKey);
@@ -483,22 +612,20 @@ input[type=number] { -moz-appearance: textfield; }
 
       const all = state.businesses.flatMap(b => b.expenses.map(e => annotate(e, b)));
 
-      const upcoming = all.filter(e => !e.isPaidThisCycle).map(e => {
+      const upcoming = all.filter(e => !e.isPaidThisCycle && (e.amount || 0) > 0).map(e => {
         let daysUntil;
-        if (e.frequency === 'monthly') {
-          // Days until this month's due date (or next month if passed)
+        if (e.frequency === 'weekly') {
+          // Days until next occurrence of dueWeekday
+          const todayWeekday = now.getDay();
+          let diff = (e.dueWeekday - todayWeekday + 7) % 7;
+          // If today is the day, diff = 0
+          daysUntil = diff;
+        } else if (e.frequency === 'monthly') {
           const thisMonthDays = new Date(currentYear, currentMonth, 0).getDate();
           const dueDay = Math.min(e.dueDay, thisMonthDays);
           let due = new Date(currentYear, currentMonth - 1, dueDay);
-          if (due < new Date(currentYear, currentMonth - 1, now.getDate())) {
-            // already passed this month -> this month is "overdue" not "next month"
-            // keep this month's date so we can show negative or 0
-            daysUntil = Math.ceil((due - new Date(currentYear, currentMonth - 1, now.getDate())) / 86400000);
-          } else {
-            daysUntil = Math.ceil((due - new Date(currentYear, currentMonth - 1, now.getDate())) / 86400000);
-          }
+          daysUntil = Math.ceil((due - new Date(currentYear, currentMonth - 1, now.getDate())) / 86400000);
         } else {
-          // Yearly: due on dueMonth/dueDay this year, or next year if passed
           const dueMonth = e.dueMonth || 1;
           const monthDays = new Date(currentYear, dueMonth, 0).getDate();
           const dueDay = Math.min(e.dueDay, monthDays);
@@ -513,8 +640,14 @@ input[type=number] { -moz-appearance: textfield; }
       }).sort((a,b) => a.daysUntil - b.daysUntil);
 
       const totalUnpaid = upcoming.reduce((s,e) => s + e.amount, 0);
-      const totalMonthly = all.filter(e => e.frequency === 'monthly').reduce((s,e) => s + e.amount, 0);
-      return { all, upcoming, totalUnpaid, totalMonthly, monthKey, yearKey };
+      // For "ต่อเดือน" total, count monthly + (weekly * ~4.33) + (yearly / 12)
+      const totalMonthly = all.filter(e => (e.amount || 0) > 0).reduce((s,e) => {
+        if (e.frequency === 'weekly') return s + (e.amount * 4.33);
+        if (e.frequency === 'monthly') return s + e.amount;
+        if (e.frequency === 'yearly') return s + (e.amount / 12);
+        return s;
+      }, 0);
+      return { all, upcoming, totalUnpaid, totalMonthly, monthKey, yearKey, weekKey };
     };
 
     const render = () => {
@@ -590,31 +723,30 @@ input[type=number] { -moz-appearance: textfield; }
     const renderSummary = (c) => {
       // Build per-business expense totals (using monthly equivalent)
       const bizSegments = state.businesses.map(b => {
-        const monthlyExp = b.expenses
-          .filter(e => e.frequency === 'monthly')
-          .reduce((s, e) => s + e.amount, 0);
-        const yearlyExp = b.expenses
-          .filter(e => e.frequency === 'yearly')
-          .reduce((s, e) => s + e.amount, 0);
-        // Convert yearly to monthly equivalent for fair pie chart
-        const monthlyEquiv = monthlyExp + (yearlyExp / 12);
+        const monthlyEquiv = (b.expenses || []).reduce((s, e) => {
+          const amt = e.amount || 0;
+          if (e.frequency === 'weekly') return s + (amt * 4.33);
+          if (e.frequency === 'monthly') return s + amt;
+          if (e.frequency === 'yearly') return s + (amt / 12);
+          return s;
+        }, 0);
         return {
           id: b.id,
           name: b.name,
           color: b.color || '#C9F0DC',
           value: monthlyEquiv,
-          rawMonthly: monthlyExp,
-          rawYearly: yearlyExp,
         };
       }).filter(s => s.value > 0).sort((a, b) => b.value - a.value);
 
       const totalExpense = bizSegments.reduce((s, x) => s + x.value, 0);
 
-      // Income totals
+      // Income totals (from expenses array, using incomeAmount)
       const totalIncome = state.businesses.reduce((s, b) => {
-        return s + (b.incomes || []).reduce((ss, i) => {
-          if (i.frequency === 'monthly') return ss + i.amount;
-          if (i.frequency === 'yearly') return ss + (i.amount / 12);
+        return s + (b.expenses || []).reduce((ss, it) => {
+          const inc = it.incomeAmount || 0;
+          if (it.frequency === 'weekly') return ss + (inc * 4.33);
+          if (it.frequency === 'monthly') return ss + inc;
+          if (it.frequency === 'yearly') return ss + (inc / 12);
           return ss;
         }, 0);
       }, 0);
@@ -667,35 +799,36 @@ input[type=number] { -moz-appearance: textfield; }
         </div>
 
         <div class="totals-card">
-          <div class="totals-row">
+          <div class="totals-header">
+            <div class="totals-header-label">สรุปการเงินต่อเดือน</div>
+          </div>
+          <div class="totals-row compact">
             <div class="totals-label">
               <div class="totals-icon income">↑</div>
-              <div>
-                <div class="totals-name">รายรับรวม</div>
-                <div class="totals-pct">ต่อเดือน</div>
-              </div>
+              <div class="totals-name">รายรับ</div>
             </div>
             <div class="totals-value income">${fmt(totalIncome)}</div>
           </div>
-          <div class="totals-row">
+          <div class="totals-row compact minus">
             <div class="totals-label">
               <div class="totals-icon expense">↓</div>
               <div>
-                <div class="totals-name">รายจ่ายรวม</div>
-                <div class="totals-pct">${totalIncome > 0 ? expensePct.toFixed(1) + '% ของรายรับ' : 'ต่อเดือน'}</div>
+                <div class="totals-name">รายจ่าย</div>
+                ${totalIncome > 0 ? `<div class="totals-pct">${expensePct.toFixed(1)}% ของรายรับ</div>` : ''}
               </div>
             </div>
-            <div class="totals-value expense">${fmt(totalExpense)}</div>
+            <div class="totals-value expense">- ${fmt(totalExpense)}</div>
           </div>
-          <div class="totals-row net">
+          <div class="totals-divider"></div>
+          <div class="totals-row net-row">
             <div class="totals-label">
               <div class="totals-icon ${net >= 0 ? 'net-pos' : 'net-neg'}">${net >= 0 ? '✓' : '!'}</div>
               <div>
-                <div class="totals-name">${net >= 0 ? 'กำไรสุทธิ' : 'ขาดทุน'}</div>
-                <div class="totals-pct">${totalIncome > 0 ? Math.abs(profitPct).toFixed(1) + '% ของรายรับ' : ''}</div>
+                <div class="totals-name big">${net >= 0 ? 'กำไรสุทธิ' : 'ขาดทุน'}</div>
+                ${totalIncome > 0 ? `<div class="totals-pct">${Math.abs(profitPct).toFixed(1)}% ของรายรับ</div>` : ''}
               </div>
             </div>
-            <div class="totals-value ${net >= 0 ? 'net-pos' : 'net-neg'}">${fmt(Math.abs(net))}</div>
+            <div class="totals-value big ${net >= 0 ? 'net-pos' : 'net-neg'}">${fmt(Math.abs(net))}</div>
           </div>
         </div>
 
@@ -730,7 +863,9 @@ input[type=number] { -moz-appearance: textfield; }
         if (e.daysUntil < 0) dayText = `เลย ${Math.abs(e.daysUntil)} วัน`;
         else if (e.daysUntil === 0) dayText = 'วันนี้';
         else dayText = `อีก ${e.daysUntil} วัน`;
-        const dueLabel = e.frequency === 'yearly'
+        const dueLabel = e.frequency === 'weekly'
+          ? `ทุกวัน${DAYS_TH[e.dueWeekday] || ''}`
+          : e.frequency === 'yearly'
           ? `ทุกปี ${e.dueDay} ${MONTHS_TH[(e.dueMonth || 1) - 1]}`
           : `ทุกวันที่ ${e.dueDay}`;
         return `
@@ -762,12 +897,32 @@ input[type=number] { -moz-appearance: textfield; }
       const yearKey = `${now.getFullYear()}`;
 
       return state.businesses.map(biz => {
-        const total = biz.expenses.reduce((s,e) => s + e.amount, 0);
-        const unpaid = biz.expenses.filter(e => {
-          const ph = e.paidHistory || [];
-          const key = e.frequency === 'monthly' ? monthKey : yearKey;
+        const items = (biz.expenses || []);
+
+        // Calculate monthly equivalents
+        const incomeMonthly = items.reduce((s, it) => {
+          const inc = it.incomeAmount || 0;
+          if (it.frequency === 'weekly') return s + (inc * 4.33);
+          if (it.frequency === 'monthly') return s + inc;
+          if (it.frequency === 'yearly') return s + (inc / 12);
+          return s;
+        }, 0);
+        const expenseMonthly = items.reduce((s, it) => {
+          const exp = it.amount || 0;
+          if (it.frequency === 'weekly') return s + (exp * 4.33);
+          if (it.frequency === 'monthly') return s + exp;
+          if (it.frequency === 'yearly') return s + (exp / 12);
+          return s;
+        }, 0);
+        const net = incomeMonthly - expenseMonthly;
+
+        // Unpaid: only items with expense > 0 that haven't been paid
+        const unpaid = items.filter(it => {
+          if (!it.amount || it.amount <= 0) return false;
+          const ph = it.paidHistory || [];
+          const key = it.frequency === 'monthly' ? monthKey : yearKey;
           return !ph.includes(key);
-        }).reduce((s,e) => s + e.amount, 0);
+        }).reduce((s, it) => s + it.amount, 0);
 
         return `
           <div class="biz-card">
@@ -787,49 +942,78 @@ input[type=number] { -moz-appearance: textfield; }
               </div>
             </div>
             <div class="biz-stats">
-              <div class="stat-item"><div class="stat-label">รวม</div><div class="stat-value">${fmt(total)}</div></div>
-              <div class="stat-item"><div class="stat-label">ค้างจ่าย</div><div class="stat-value unpaid">${fmt(unpaid)}</div></div>
+              <div class="stat-item"><div class="stat-label">รายรับ/ด.</div><div class="stat-value" style="color:#2A8050">${fmt(incomeMonthly)}</div></div>
+              <div class="stat-item"><div class="stat-label">รายจ่าย/ด.</div><div class="stat-value" style="color:#B43030">${fmt(expenseMonthly)}</div></div>
+              <div class="stat-item"><div class="stat-label">${net >= 0 ? 'กำไร' : 'ขาดทุน'}</div><div class="stat-value" style="color:${net >= 0 ? '#1E5F8C' : '#B45A0A'}">${fmt(Math.abs(net))}</div></div>
             </div>
-            ${biz.expenses.length > 0 ? `
+            ${unpaid > 0 ? `
+              <div class="unpaid-banner">
+                <span>⏰ ค้างจ่ายเดือนนี้</span>
+                <span>${fmt(unpaid)}</span>
+              </div>
+            ` : ''}
+            ${items.length > 0 ? `
               <div class="exp-list">
-                ${biz.expenses.map(e => {
-                  const ph = e.paidHistory || [];
-                  const key = e.frequency === 'monthly' ? monthKey : yearKey;
+                ${items.map(it => {
+                  const hasIncome = (it.incomeAmount || 0) > 0;
+                  const hasExpense = (it.amount || 0) > 0;
+                  const itemNet = (it.incomeAmount || 0) - (it.amount || 0);
+                  const ph = it.paidHistory || [];
+                  const key = it.frequency === 'monthly' ? monthKey : yearKey;
                   const isPaid = ph.includes(key);
-                  const meta = e.frequency === 'yearly'
-                    ? `ทุกปี ${e.dueDay} ${MONTHS_TH[(e.dueMonth || 1) - 1]}`
-                    : `ทุกวันที่ ${e.dueDay} · รายเดือน`;
+
+                  let dateMeta = '';
+                  if (hasExpense) {
+                    if (it.frequency === 'weekly') {
+                      dateMeta = `รายสัปดาห์ · ทุกวัน${DAYS_TH[it.dueWeekday] || ''}`;
+                    } else if (it.frequency === 'yearly') {
+                      dateMeta = `รายปี · ${it.dueDay} ${MONTHS_TH[(it.dueMonth || 1) - 1]}`;
+                    } else {
+                      dateMeta = `รายเดือน · วันที่ ${it.dueDay}`;
+                    }
+                  } else {
+                    if (it.frequency === 'weekly') dateMeta = 'รายรับรายสัปดาห์';
+                    else if (it.frequency === 'monthly') dateMeta = 'รายรับรายเดือน';
+                    else dateMeta = 'รายรับรายปี';
+                  }
+
                   return `
-                  <div class="exp-row">
-                    <div class="check ${isPaid ? 'checked' : ''}" onclick="togglePaid('${biz.id}','${e.id}')">${isPaid ? '✓' : ''}</div>
-                    <div class="exp-row-info" onclick="openExpModal('${biz.id}','${e.id}')">
-                      <div class="exp-row-name ${isPaid ? 'paid' : ''}">${escapeHtml(e.name)}</div>
-                      <div class="exp-row-meta">${meta}</div>
+                  <div class="combo-item ${isPaid ? 'paid-item' : ''}">
+                    <div class="combo-header">
+                      ${hasExpense ? `
+                        <div class="check ${isPaid ? 'checked' : ''}" onclick="togglePaid('${biz.id}','${it.id}')">${isPaid ? '✓' : ''}</div>
+                      ` : `<div class="check-spacer"></div>`}
+                      <div class="combo-info" onclick="openItemModal('${biz.id}','item','${it.id}')">
+                        <div class="combo-name ${isPaid ? 'paid' : ''}">${escapeHtml(it.name)}</div>
+                        <div class="combo-meta">${dateMeta}</div>
+                      </div>
+                      <button class="x-btn" onclick="deleteExp('${biz.id}','${it.id}')">×</button>
                     </div>
-                    <div class="exp-row-price ${isPaid ? 'paid' : ''}">${fmt(e.amount)}</div>
-                    <button class="x-btn" onclick="deleteExp('${biz.id}','${e.id}')">×</button>
+                    <div class="combo-numbers">
+                      ${hasIncome ? `
+                        <div class="combo-cell income">
+                          <div class="combo-cell-label">รายรับ</div>
+                          <div class="combo-cell-value">+${fmt(it.incomeAmount)}</div>
+                        </div>
+                      ` : ''}
+                      ${hasExpense ? `
+                        <div class="combo-cell expense">
+                          <div class="combo-cell-label">รายจ่าย</div>
+                          <div class="combo-cell-value">-${fmt(it.amount)}</div>
+                        </div>
+                      ` : ''}
+                      ${(hasIncome && hasExpense) ? `
+                        <div class="combo-cell ${itemNet >= 0 ? 'profit' : 'loss'}">
+                          <div class="combo-cell-label">${itemNet >= 0 ? 'กำไร' : 'ขาดทุน'}</div>
+                          <div class="combo-cell-value">${fmt(Math.abs(itemNet))}</div>
+                        </div>
+                      ` : ''}
+                    </div>
                   </div>
                 `;}).join('')}
               </div>
             ` : ''}
-            <button class="add-exp" onclick="openExpModal('${biz.id}')">+ เพิ่มรายการจ่าย</button>
-
-            ${(biz.incomes || []).length > 0 ? `
-              <div class="income-section">
-                ${biz.incomes.map(i => `
-                  <div class="income-row">
-                    <div class="income-icon-mini">↑</div>
-                    <div class="exp-row-info" onclick="openIncomeModal('${biz.id}','${i.id}')">
-                      <div class="exp-row-name">${escapeHtml(i.name)}</div>
-                      <div class="exp-row-meta">${i.frequency === 'monthly' ? 'รายรับต่อเดือน' : 'รายรับต่อปี'}</div>
-                    </div>
-                    <div class="exp-row-price" style="color:#2A8050">${fmt(i.amount)}</div>
-                    <button class="x-btn" onclick="deleteIncome('${biz.id}','${i.id}')">×</button>
-                  </div>
-                `).join('')}
-              </div>
-            ` : ''}
-            <button class="add-income" onclick="openIncomeModal('${biz.id}')">+ เพิ่มรายรับ</button>
+            <button class="add-exp" onclick="openItemModal('${biz.id}')">+ เพิ่มรายการ</button>
           </div>
         `;
       }).join('');
@@ -845,9 +1029,17 @@ input[type=number] { -moz-appearance: textfield; }
       if (!exp) return;
       if (!exp.paidHistory) exp.paidHistory = [];
       const now = new Date();
-      const key = exp.frequency === 'monthly'
-        ? `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`
-        : `${now.getFullYear()}`;
+      let key;
+      if (exp.frequency === 'weekly') {
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+        const weekNum = Math.floor((dayOfYear + startOfYear.getDay()) / 7);
+        key = `${now.getFullYear()}-W${weekNum}`;
+      } else if (exp.frequency === 'monthly') {
+        key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      } else {
+        key = `${now.getFullYear()}`;
+      }
       const idx = exp.paidHistory.indexOf(key);
       if (idx >= 0) exp.paidHistory.splice(idx, 1);
       else exp.paidHistory.push(key);
@@ -1053,6 +1245,7 @@ input[type=number] { -moz-appearance: textfield; }
     let editingExp = null;
 
     const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const DAYS_TH = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.']; // 0=Sunday ... 6=Saturday
 
     window.openExpModal = (bizId, expId) => {
       expBizId = bizId;
@@ -1180,108 +1373,184 @@ input[type=number] { -moz-appearance: textfield; }
       render();
     };
 
-    // ===== Modal: Income =====
-    let incBizId = null;
-    let incFreq = 'monthly';
-    let editingIncome = null;
+    // ===== Modal: Item (1 รายการมีทั้งรายรับและรายจ่าย) =====
+    let itemBizId = null;
+    let itemFreq = 'monthly';
+    let editingItem = null;
+    let itemMonth = (new Date().getMonth() + 1);
+    let itemWeekday = new Date().getDay();
 
-    window.openIncomeModal = (bizId, incId) => {
-      incBizId = bizId;
-      editingIncome = null;
-      incFreq = 'monthly';
-      let presetName = '', presetAmount = '';
+    window.openItemModal = (bizId, _ignored, itemId) => {
+      itemBizId = bizId;
+      editingItem = null;
+      itemFreq = 'monthly';
+      itemMonth = (new Date().getMonth() + 1);
+      itemWeekday = new Date().getDay();
 
-      if (incId) {
+      let presetName = '', presetIncome = '', presetExpense = '', presetDay = '';
+
+      if (itemId) {
         const biz = state.businesses.find(b => b.id === bizId);
-        const inc = (biz?.incomes || []).find(i => i.id === incId);
-        if (inc) {
-          editingIncome = inc;
-          incFreq = inc.frequency;
-          presetName = inc.name;
-          presetAmount = inc.amount;
+        const exp = biz?.expenses.find(e => e.id === itemId);
+        if (exp) {
+          editingItem = exp;
+          itemFreq = exp.frequency;
+          presetName = exp.name;
+          presetIncome = exp.incomeAmount || '';
+          presetExpense = exp.amount || '';
+          presetDay = exp.dueDay || '';
+          itemMonth = exp.dueMonth || itemMonth;
+          if (typeof exp.dueWeekday === 'number') itemWeekday = exp.dueWeekday;
         }
       }
 
       const modal = document.createElement('div');
       modal.className = 'modal-bg';
-      modal.id = 'inc-modal';
-      modal.onclick = (e) => { if (e.target === modal) closeIncomeModal(); };
+      modal.id = 'item-modal';
+      modal.onclick = (e) => { if (e.target === modal) closeItemModal(); };
       modal.innerHTML = `
         <div class="modal">
           <div class="grab"></div>
-          <h2 class="serif" style="color:#2A8050">${editingIncome ? 'แก้ไขรายรับ' : 'เพิ่มรายรับ'}</h2>
+          <h2 class="serif">${editingItem ? 'แก้ไขรายการ' : 'เพิ่มรายการ'}</h2>
 
           <div class="field">
-            <label class="label">รายการ</label>
-            <input class="input" id="inc-name" value="${escapeHtml(presetName)}" placeholder="เช่น ยอดขาย, ค่าเช่ารับ" />
+            <label class="label">ชื่อรายการ</label>
+            <input class="input" id="item-name" value="${escapeHtml(presetName)}" placeholder="เช่น บ้านปล่อยเช่า, ค่าเช่าร้าน" />
           </div>
 
-          <div class="field">
-            <label class="label">จำนวนเงิน (฿)</label>
-            <input class="input" type="number" inputmode="decimal" id="inc-amount" value="${presetAmount}" placeholder="0" />
+          <div class="row-2">
+            <div class="field">
+              <label class="label" style="color:#2A8050">↑ รายรับ (฿)</label>
+              <input class="input income-input" type="number" inputmode="decimal" id="item-income" value="${presetIncome}" placeholder="0" />
+            </div>
+            <div class="field">
+              <label class="label" style="color:#B43030">↓ รายจ่าย (฿)</label>
+              <input class="input expense-input" type="number" inputmode="decimal" id="item-expense" value="${presetExpense}" placeholder="0" />
+            </div>
           </div>
+
+          <div class="hint">ใส่อย่างน้อย 1 ช่อง — ถ้ามีทั้งคู่ระบบจะหักลบให้เป็นกำไรอัตโนมัติ</div>
 
           <div class="field">
             <label class="label">ความถี่</label>
             <div class="freq-row">
-              <button class="freq-btn ${incFreq === 'monthly' ? 'active' : ''}" id="inc-freq-monthly" onclick="pickIncFreq('monthly')">รายเดือน</button>
-              <button class="freq-btn ${incFreq === 'yearly' ? 'active' : ''}" id="inc-freq-yearly" onclick="pickIncFreq('yearly')">รายปี</button>
+              <button class="freq-btn ${itemFreq === 'weekly' ? 'active' : ''}" id="item-freq-weekly" onclick="pickItemFreq('weekly')">รายสัปดาห์</button>
+              <button class="freq-btn ${itemFreq === 'monthly' ? 'active' : ''}" id="item-freq-monthly" onclick="pickItemFreq('monthly')">รายเดือน</button>
+              <button class="freq-btn ${itemFreq === 'yearly' ? 'active' : ''}" id="item-freq-yearly" onclick="pickItemFreq('yearly')">รายปี</button>
             </div>
           </div>
 
+          <div class="field" id="item-weekday-field" style="display:${itemFreq === 'weekly' ? '' : 'none'}">
+            <label class="label">วันในสัปดาห์</label>
+            <div class="weekday-grid" id="item-weekday-grid">
+              ${DAYS_TH.map((d, i) => `
+                <div class="weekday-pick ${i === itemWeekday ? 'selected' : ''}" onclick="pickItemWeekday(${i})">${d}</div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="field" id="item-month-field" style="display:${itemFreq === 'yearly' ? '' : 'none'}">
+            <label class="label">เดือนที่ครบกำหนด</label>
+            <div class="month-grid" id="item-month-grid">
+              ${MONTHS_TH.map((m, i) => `
+                <div class="month-pick ${(i+1) === itemMonth ? 'selected' : ''}" onclick="pickItemMonth(${i+1})">${m}</div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="field" id="item-day-field" style="display:${itemFreq === 'weekly' ? 'none' : ''}">
+            <label class="label">วันที่ครบกำหนด (ของรายจ่าย)</label>
+            <input class="input" type="number" inputmode="numeric" min="1" max="31" id="item-day" value="${presetDay}" placeholder="1-31 (ไม่บังคับถ้ามีแค่รายรับ)" />
+          </div>
+
           <div class="modal-actions">
-            <button class="btn btn-cancel" onclick="closeIncomeModal()">ยกเลิก</button>
-            <button class="btn btn-confirm" style="background:#2A8050" onclick="saveIncome()">${editingIncome ? 'บันทึก' : 'เพิ่ม'}</button>
+            <button class="btn btn-cancel" onclick="closeItemModal()">ยกเลิก</button>
+            <button class="btn btn-confirm" onclick="saveItem()">${editingItem ? 'บันทึก' : 'เพิ่ม'}</button>
           </div>
         </div>
       `;
       document.body.appendChild(modal);
-      if (!editingIncome) setTimeout(() => document.getElementById('inc-name').focus(), 200);
+      if (!editingItem) setTimeout(() => document.getElementById('item-name').focus(), 200);
     };
 
-    window.closeIncomeModal = () => {
-      const m = document.getElementById('inc-modal');
+    window.closeItemModal = () => {
+      const m = document.getElementById('item-modal');
       if (m) m.remove();
-      incBizId = null;
-      editingIncome = null;
+      itemBizId = null;
+      editingItem = null;
     };
 
-    window.pickIncFreq = (f) => {
-      incFreq = f;
-      document.getElementById('inc-freq-monthly').classList.toggle('active', f === 'monthly');
-      document.getElementById('inc-freq-yearly').classList.toggle('active', f === 'yearly');
+    window.pickItemFreq = (f) => {
+      itemFreq = f;
+      document.getElementById('item-freq-weekly').classList.toggle('active', f === 'weekly');
+      document.getElementById('item-freq-monthly').classList.toggle('active', f === 'monthly');
+      document.getElementById('item-freq-yearly').classList.toggle('active', f === 'yearly');
+      const wf = document.getElementById('item-weekday-field');
+      if (wf) wf.style.display = (f === 'weekly') ? '' : 'none';
+      const mf = document.getElementById('item-month-field');
+      if (mf) mf.style.display = (f === 'yearly') ? '' : 'none';
+      const df = document.getElementById('item-day-field');
+      if (df) df.style.display = (f === 'weekly') ? 'none' : '';
     };
 
-    window.saveIncome = () => {
-      const name = document.getElementById('inc-name').value.trim();
-      const amount = parseFloat(document.getElementById('inc-amount').value);
+    window.pickItemMonth = (m) => {
+      itemMonth = m;
+      document.querySelectorAll('#item-month-grid .month-pick').forEach((el, i) => {
+        el.classList.toggle('selected', (i+1) === m);
+      });
+    };
+
+    window.pickItemWeekday = (w) => {
+      itemWeekday = w;
+      document.querySelectorAll('#item-weekday-grid .weekday-pick').forEach((el, i) => {
+        el.classList.toggle('selected', i === w);
+      });
+    };
+
+    window.saveItem = () => {
+      const name = document.getElementById('item-name').value.trim();
+      const incomeAmount = parseFloat(document.getElementById('item-income').value) || 0;
+      const expenseAmount = parseFloat(document.getElementById('item-expense').value) || 0;
+      const dayRaw = itemFreq !== 'weekly' ? document.getElementById('item-day').value : null;
+      const day = dayRaw ? parseInt(dayRaw) : null;
+
       if (!name) return alert('ใส่ชื่อรายการ');
-      if (isNaN(amount) || amount <= 0) return alert('ใส่จำนวนเงิน');
+      if (incomeAmount <= 0 && expenseAmount <= 0) return alert('ใส่จำนวนรายรับ หรือ รายจ่าย อย่างน้อย 1 ช่อง');
+      if (itemFreq !== 'weekly' && expenseAmount > 0 && (!day || day < 1 || day > 31)) return alert('ใส่วันที่ครบกำหนด 1-31');
 
-      const biz = state.businesses.find(b => b.id === incBizId);
+      const biz = state.businesses.find(b => b.id === itemBizId);
       if (!biz) return;
-      if (!biz.incomes) biz.incomes = [];
 
-      if (editingIncome) {
-        editingIncome.name = name;
-        editingIncome.amount = amount;
-        editingIncome.frequency = incFreq;
+      const itemData = {
+        name,
+        amount: expenseAmount,
+        incomeAmount: incomeAmount,
+        dueDay: itemFreq === 'weekly' ? null : (day || 1),
+        dueWeekday: itemFreq === 'weekly' ? itemWeekday : null,
+        frequency: itemFreq,
+        dueMonth: (itemFreq === 'yearly') ? itemMonth : null,
+      };
+
+      if (editingItem) {
+        Object.assign(editingItem, itemData);
       } else {
-        biz.incomes.push({
+        biz.expenses.push({
           id: Date.now().toString(),
-          name, amount, frequency: incFreq,
+          ...itemData,
+          paidHistory: [],
         });
       }
       save();
-      closeIncomeModal();
+      closeItemModal();
       render();
     };
 
     window.deleteIncome = (bizId, incId) => {
-      if (!confirm('ลบรายรับนี้?')) return;
+      // Backward compat - now deletes the merged item
       const biz = state.businesses.find(b => b.id === bizId);
-      if (!biz || !biz.incomes) return;
-      biz.incomes = biz.incomes.filter(i => i.id !== incId);
+      if (!biz) return;
+      biz.expenses = (biz.expenses || []).filter(e => e.id !== incId);
+      if (biz.incomes) biz.incomes = biz.incomes.filter(i => i.id !== incId);
       save(); render();
     };
 
