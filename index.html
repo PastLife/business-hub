@@ -81,8 +81,8 @@ background-image: linear-gradient(135deg, #C9E4F5 0%, #D6C7F0 100%);
 background: #F1F0EA; border-radius: 999px; padding: 4px; display: flex; gap: 4px;
 }
 .tab {
-flex: 1; padding: 10px 12px; border-radius: 999px; border: none; background: transparent;
-font-family: inherit; font-size: 13px; font-weight: 500; color: var(–muted);
+flex: 1; padding: 10px 4px; border-radius: 999px; border: none; background: transparent;
+font-family: inherit; font-size: 12px; font-weight: 500; color: var(–muted);
 cursor: pointer; transition: all 0.2s;
 }
 .tab.active { background: white; color: var(–text); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -489,6 +489,162 @@ padding: 0 4px; font-style: italic;
 .income-input:focus { border-color: #2A8050 !important; }
 .expense-input:focus { border-color: #B43030 !important; }
 
+/* Recurring toggle switch */
+.recurring-toggle {
+display: flex; align-items: center; gap: 12px; padding: 14px;
+background: #FAFAF6; border: 1px solid var(–line); border-radius: 14px;
+margin-bottom: 14px; cursor: pointer;
+}
+.recurring-info { flex: 1; }
+.recurring-title { font-size: 14px; font-weight: 600; }
+.recurring-desc { font-size: 11px; color: var(–muted); margin-top: 2px; }
+.switch {
+width: 44px; height: 26px; background: #D5D4CE; border-radius: 999px;
+position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.switch.on { background: #1A1A1A; }
+.switch-knob {
+position: absolute; width: 20px; height: 20px; border-radius: 50%;
+background: white; top: 3px; left: 3px; transition: left 0.2s;
+box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.switch.on .switch-knob { left: 21px; }
+
+/* “Once” badge for non-recurring items */
+.once-badge {
+display: inline-block; padding: 2px 7px; border-radius: 999px;
+background: #FFE2C9; color: #A65A0A;
+font-size: 9px; letter-spacing: 0.05em; font-weight: 700;
+text-transform: uppercase; margin-left: 4px; vertical-align: middle;
+}
+
+/* Plan / Calendar */
+.plan-section { padding: 0 16px; }
+.plan-header {
+display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.plan-title {
+flex: 1; text-align: center; font-size: 17px; font-weight: 700;
+letter-spacing: -0.01em;
+}
+.nav-btn {
+width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(–line);
+background: white; font-size: 20px; font-weight: 700; color: var(–text);
+cursor: pointer; line-height: 1;
+}
+.nav-btn:active { transform: scale(0.92); }
+
+.plan-view-toggle {
+display: flex; gap: 6px; margin-bottom: 14px; align-items: center;
+}
+.view-btn {
+flex: 1; padding: 8px; border-radius: 999px; border: 1px solid var(–line);
+background: white; font-family: inherit; font-size: 12px; font-weight: 600;
+color: var(–muted); cursor: pointer;
+}
+.view-btn.active { background: #1A1A1A; color: white; border-color: #1A1A1A; }
+.today-btn {
+padding: 8px 14px; border-radius: 999px; border: 1px solid #1A1A1A;
+background: white; font-family: inherit; font-size: 12px; font-weight: 600;
+color: #1A1A1A; cursor: pointer;
+}
+
+.plan-summary {
+background: white; border: 1px solid var(–line); border-radius: 16px;
+padding: 14px 16px; margin-bottom: 12px;
+display: flex; justify-content: space-between; align-items: center;
+}
+.plan-summary-label {
+font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+color: var(–muted); font-weight: 600;
+}
+.plan-summary-value { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.plan-summary-value.pos { color: #2A8050; }
+.plan-summary-value.neg { color: #B43030; }
+
+.cal-grid {
+background: white; border: 1px solid var(–line); border-radius: 16px;
+padding: 8px; margin-bottom: 14px;
+}
+.cal-weekdays {
+display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+margin-bottom: 4px;
+}
+.cal-weekday {
+text-align: center; font-size: 10px; font-weight: 700;
+color: var(–muted); padding: 6px 0; letter-spacing: 0.05em;
+}
+.cal-days {
+display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+}
+.cal-days.week-view .cal-day { min-height: 88px; }
+.cal-day {
+min-height: 60px; border-radius: 10px; padding: 4px;
+background: #FAFAF6; cursor: pointer; position: relative;
+display: flex; flex-direction: column; align-items: center;
+border: 1.5px solid transparent; transition: all 0.1s;
+}
+.cal-day:active { transform: scale(0.96); }
+.cal-day.out-month { opacity: 0.35; }
+.cal-day.today { background: #FFF8E0; border-color: #E5C76B; }
+.cal-day.selected { background: #1A1A1A; }
+.cal-day.selected .cal-day-num,
+.cal-day.selected .cal-day-cum.pos,
+.cal-day.selected .cal-day-cum.neg { color: white; }
+.cal-day.has-income:not(.selected) { background: #F0F9F4; }
+.cal-day.has-expense:not(.selected) { background: #FFF5F5; }
+.cal-day.has-mixed:not(.selected) { background: #FFF8EA; }
+.cal-day-num {
+font-size: 13px; font-weight: 600; color: var(–text);
+margin-top: 2px;
+}
+.cal-day-cum {
+font-size: 9px; font-weight: 700; margin-top: 2px;
+letter-spacing: -0.01em;
+}
+.cal-day-cum.pos { color: #2A8050; }
+.cal-day-cum.neg { color: #B43030; }
+.cal-day-dots {
+display: flex; gap: 2px; margin-top: auto; padding-bottom: 3px;
+}
+.cal-dot {
+width: 5px; height: 5px; border-radius: 50%;
+}
+
+.plan-day-detail {
+background: white; border: 1px solid var(–line); border-radius: 16px;
+padding: 14px; margin-bottom: 16px;
+}
+.plan-day-title {
+font-size: 14px; font-weight: 700; margin-bottom: 10px;
+padding-bottom: 8px; border-bottom: 1px solid #F5F4EE;
+}
+.plan-empty {
+text-align: center; color: var(–muted); padding: 16px 0;
+font-size: 13px; font-style: italic;
+}
+.plan-event {
+display: flex; gap: 10px; align-items: center;
+padding: 10px 0; border-bottom: 1px solid #F5F4EE;
+}
+.plan-event:last-of-type { border-bottom: none; }
+.plan-event-info { flex: 1; min-width: 0; }
+.plan-event-name { font-size: 14px; font-weight: 600; }
+.plan-event-biz {
+font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+font-weight: 600; margin-top: 2px;
+}
+.plan-event-amounts { text-align: right; font-size: 13px; font-weight: 700; }
+.plan-amt.income { color: #2A8050; }
+.plan-amt.expense { color: #B43030; }
+.plan-day-net {
+display: flex; justify-content: space-between; align-items: center;
+padding: 10px 0 4px; margin-top: 6px;
+border-top: 2px solid #1A1A1A; font-size: 14px; font-weight: 700;
+}
+.plan-day-net .pos { color: #2A8050; }
+.plan-day-net .neg { color: #B43030; }
+
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .btn {
 flex: 1; padding: 14px; border-radius: 14px; border: none;
@@ -514,7 +670,12 @@ input[type=number] { -moz-appearance: textfield; }
   <script>
     // ===== Storage =====
     const STORAGE_KEY = 'businessHub_v1';
-    let state = { businesses: [], tab: 'summary' };
+    let state = {
+      businesses: [],
+      tab: 'summary',
+      planView: 'month', // 'month' | 'week'
+      planAnchor: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+    };
 
     const load = () => {
       try {
@@ -663,6 +824,7 @@ input[type=number] { -moz-appearance: textfield; }
           <div class="tab-row">
             <button class="tab ${state.tab === 'summary' ? 'active' : ''}" onclick="setTab('summary')">ภาพรวม</button>
             <button class="tab ${state.tab === 'overview' ? 'active' : ''}" onclick="setTab('overview')">ครบกำหนด</button>
+            <button class="tab ${state.tab === 'plan' ? 'active' : ''}" onclick="setTab('plan')">วางแผน</button>
             <button class="tab ${state.tab === 'businesses' ? 'active' : ''}" onclick="setTab('businesses')">ธุรกิจ</button>
           </div>
         </div>
@@ -670,6 +832,7 @@ input[type=number] { -moz-appearance: textfield; }
         <div class="content">
           ${state.tab === 'summary' ? renderSummary(c) : ''}
           ${state.tab === 'overview' ? renderOverview(c.upcoming) : ''}
+          ${state.tab === 'plan' ? renderPlan() : ''}
           ${state.tab === 'businesses' ? renderBusinesses() : ''}
         </div>
 
@@ -718,6 +881,265 @@ input[type=number] { -moz-appearance: textfield; }
         return arc;
       }).join('');
       return `<svg class="chart-svg" viewBox="0 0 200 200">${arcs}</svg>`;
+    };
+
+    // ===== Plan view (Calendar) =====
+
+    // Get all "events" (occurrences) for a given date
+    const getEventsForDate = (date) => {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const weekday = date.getDay();
+      const monthDays = new Date(year, month, 0).getDate();
+
+      const events = [];
+      state.businesses.forEach(biz => {
+        (biz.expenses || []).forEach(it => {
+          const inc = it.incomeAmount || 0;
+          const exp = it.amount || 0;
+          if (inc <= 0 && exp <= 0) return;
+
+          let occurs = false;
+          if (it.frequency === 'weekly') {
+            occurs = (weekday === it.dueWeekday);
+          } else if (it.frequency === 'monthly') {
+            const dueDay = Math.min(it.dueDay, monthDays);
+            occurs = (day === dueDay);
+          } else if (it.frequency === 'yearly') {
+            if (month === it.dueMonth) {
+              const dueMonthDays = new Date(year, it.dueMonth, 0).getDate();
+              const dueDay = Math.min(it.dueDay, dueMonthDays);
+              occurs = (day === dueDay);
+            }
+          }
+
+          if (occurs) {
+            events.push({
+              bizId: biz.id,
+              bizName: biz.name,
+              bizColor: biz.color,
+              bizIcon: biz.icon,
+              bizImage: biz.image,
+              itemId: it.id,
+              name: it.name,
+              income: inc,
+              expense: exp,
+              net: inc - exp,
+              frequency: it.frequency,
+            });
+          }
+        });
+      });
+      return events;
+    };
+
+    const isSameDay = (a, b) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    const formatMoneyShort = (n) => {
+      const abs = Math.abs(n);
+      if (abs >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+      if (abs >= 10000) return (n / 1000).toFixed(0) + 'K';
+      if (abs >= 1000) return (n / 1000).toFixed(1) + 'K';
+      return Math.round(n).toString();
+    };
+
+    const renderPlan = () => {
+      const anchor = new Date(state.planAnchor);
+      const today = new Date();
+
+      // Build days array based on view
+      let days = [];
+      let title = '';
+
+      if (state.planView === 'month') {
+        const year = anchor.getFullYear();
+        const month = anchor.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startWeekday = firstDay.getDay();
+        // Pad with previous month days
+        for (let i = startWeekday - 1; i >= 0; i--) {
+          const d = new Date(year, month, -i);
+          days.push({ date: d, inMonth: false });
+        }
+        for (let d = 1; d <= lastDay.getDate(); d++) {
+          days.push({ date: new Date(year, month, d), inMonth: true });
+        }
+        // Pad to multiple of 7
+        while (days.length % 7 !== 0) {
+          const last = days[days.length - 1].date;
+          const next = new Date(last);
+          next.setDate(next.getDate() + 1);
+          days.push({ date: next, inMonth: false });
+        }
+        title = anchor.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
+      } else {
+        // Week view: Sunday-Saturday containing anchor
+        const start = new Date(anchor);
+        start.setDate(start.getDate() - start.getDay());
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(start);
+          d.setDate(start.getDate() + i);
+          days.push({ date: d, inMonth: true });
+        }
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        title = `${start.getDate()} ${MONTHS_TH[start.getMonth()]} - ${end.getDate()} ${MONTHS_TH[end.getMonth()]} ${end.getFullYear() + 543 - 543}`;
+      }
+
+      // Compute cumulative net from start of MONTH for each day
+      // For both views, cumulative resets at start of the month containing the day
+      const cumulative = new Map();
+      // Group days by month key
+      const monthGroups = {};
+      days.forEach(d => {
+        const key = `${d.date.getFullYear()}-${d.date.getMonth()}`;
+        if (!monthGroups[key]) monthGroups[key] = [];
+        monthGroups[key].push(d);
+      });
+
+      Object.keys(monthGroups).forEach(key => {
+        const [yr, mo] = key.split('-').map(Number);
+        const lastDay = new Date(yr, mo + 1, 0).getDate();
+        let running = 0;
+        for (let dayNum = 1; dayNum <= lastDay; dayNum++) {
+          const d = new Date(yr, mo, dayNum);
+          const evs = getEventsForDate(d);
+          const dayNet = evs.reduce((s, e) => s + e.net, 0);
+          running += dayNet;
+          cumulative.set(d.toDateString(), running);
+        }
+      });
+
+      // Find selected day events
+      const selectedDate = new Date(state.planAnchor);
+      const selectedEvents = getEventsForDate(selectedDate);
+
+      // Total month net (the cumulative at end of selected month)
+      const lastOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+      const monthTotalNet = cumulative.get(lastOfMonth.toDateString()) || 0;
+
+      const weekdayHeaders = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+      return `
+        <div class="plan-section">
+          <div class="plan-header">
+            <button class="nav-btn" onclick="planNav(-1)">‹</button>
+            <div class="plan-title">${title}</div>
+            <button class="nav-btn" onclick="planNav(1)">›</button>
+          </div>
+
+          <div class="plan-view-toggle">
+            <button class="view-btn ${state.planView === 'week' ? 'active' : ''}" onclick="setPlanView('week')">สัปดาห์</button>
+            <button class="view-btn ${state.planView === 'month' ? 'active' : ''}" onclick="setPlanView('month')">เดือน</button>
+            <button class="today-btn" onclick="planToday()">วันนี้</button>
+          </div>
+
+          <div class="plan-summary">
+            <div class="plan-summary-label">ยอดสะสมสุทธิเดือนนี้</div>
+            <div class="plan-summary-value ${monthTotalNet >= 0 ? 'pos' : 'neg'}">
+              ${monthTotalNet >= 0 ? '+' : '-'}${fmt(Math.abs(monthTotalNet))}
+            </div>
+          </div>
+
+          <div class="cal-grid">
+            <div class="cal-weekdays">
+              ${weekdayHeaders.map(w => `<div class="cal-weekday">${w}</div>`).join('')}
+            </div>
+            <div class="cal-days ${state.planView === 'week' ? 'week-view' : ''}">
+              ${days.map(d => {
+                const dKey = d.date.toDateString();
+                const evs = getEventsForDate(d.date);
+                const cumNet = cumulative.get(dKey) || 0;
+                const isToday = isSameDay(d.date, today);
+                const isSelected = isSameDay(d.date, selectedDate);
+                const hasEvents = evs.length > 0;
+                const dayNet = evs.reduce((s, e) => s + e.net, 0);
+
+                let bgTint = '';
+                if (hasEvents) {
+                  if (dayNet > 0) bgTint = 'has-income';
+                  else if (dayNet < 0) bgTint = 'has-expense';
+                  else bgTint = 'has-mixed';
+                }
+
+                const dotColors = [...new Set(evs.map(e => e.bizColor))].slice(0, 3);
+
+                return `
+                  <div class="cal-day ${d.inMonth ? '' : 'out-month'} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${bgTint}"
+                       onclick="selectPlanDay('${d.date.toISOString().slice(0,10)}')">
+                    <div class="cal-day-num">${d.date.getDate()}</div>
+                    ${hasEvents ? `
+                      <div class="cal-day-cum ${cumNet >= 0 ? 'pos' : 'neg'}">
+                        ${cumNet >= 0 ? '' : '-'}${formatMoneyShort(Math.abs(cumNet))}
+                      </div>
+                      <div class="cal-day-dots">
+                        ${dotColors.map(c => `<span class="cal-dot" style="background:${c}"></span>`).join('')}
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <div class="plan-day-detail">
+            <div class="plan-day-title">
+              ${selectedDate.toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </div>
+            ${selectedEvents.length === 0 ? `
+              <div class="plan-empty">ไม่มีรายการในวันนี้</div>
+            ` : `
+              ${selectedEvents.map(e => {
+                const biz = state.businesses.find(b => b.id === e.bizId);
+                return `
+                <div class="plan-event">
+                  ${avatarHTML(biz)}
+                  <div class="plan-event-info">
+                    <div class="plan-event-name">${escapeHtml(e.name)}</div>
+                    <div class="plan-event-biz" style="color:${e.bizColor}">${escapeHtml(e.bizName)}</div>
+                  </div>
+                  <div class="plan-event-amounts">
+                    ${e.income > 0 ? `<div class="plan-amt income">+${fmt(e.income)}</div>` : ''}
+                    ${e.expense > 0 ? `<div class="plan-amt expense">-${fmt(e.expense)}</div>` : ''}
+                  </div>
+                </div>
+              `}).join('')}
+              <div class="plan-day-net">
+                <span>สุทธิวันนี้</span>
+                <span class="${selectedEvents.reduce((s,e)=>s+e.net,0) >= 0 ? 'pos' : 'neg'}">
+                  ${selectedEvents.reduce((s,e)=>s+e.net,0) >= 0 ? '+' : '-'}${fmt(Math.abs(selectedEvents.reduce((s,e)=>s+e.net,0)))}
+                </span>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    };
+
+    window.setPlanView = (v) => { state.planView = v; render(); };
+    window.planNav = (delta) => {
+      const d = new Date(state.planAnchor);
+      if (state.planView === 'month') {
+        d.setMonth(d.getMonth() + delta);
+        d.setDate(1);
+      } else {
+        d.setDate(d.getDate() + (delta * 7));
+      }
+      state.planAnchor = d.toISOString().slice(0,10);
+      render();
+    };
+    window.planToday = () => {
+      state.planAnchor = new Date().toISOString().slice(0,10);
+      render();
+    };
+    window.selectPlanDay = (iso) => {
+      state.planAnchor = iso;
+      render();
     };
 
     const renderSummary = (c) => {
@@ -976,6 +1398,8 @@ input[type=number] { -moz-appearance: textfield; }
                     else if (it.frequency === 'monthly') dateMeta = 'รายรับรายเดือน';
                     else dateMeta = 'รายรับรายปี';
                   }
+                  const isRecurring = (it.recurring !== false);
+                  const badgeOnce = !isRecurring ? `<span class="once-badge">ครั้งเดียว</span>` : '';
 
                   return `
                   <div class="combo-item ${isPaid ? 'paid-item' : ''}">
@@ -984,7 +1408,7 @@ input[type=number] { -moz-appearance: textfield; }
                         <div class="check ${isPaid ? 'checked' : ''}" onclick="togglePaid('${biz.id}','${it.id}')">${isPaid ? '✓' : ''}</div>
                       ` : `<div class="check-spacer"></div>`}
                       <div class="combo-info" onclick="openItemModal('${biz.id}','item','${it.id}')">
-                        <div class="combo-name ${isPaid ? 'paid' : ''}">${escapeHtml(it.name)}</div>
+                        <div class="combo-name ${isPaid ? 'paid' : ''}">${escapeHtml(it.name)} ${badgeOnce}</div>
                         <div class="combo-meta">${dateMeta}</div>
                       </div>
                       <button class="x-btn" onclick="deleteExp('${biz.id}','${it.id}')">×</button>
@@ -1027,6 +1451,15 @@ input[type=number] { -moz-appearance: textfield; }
       if (!biz) return;
       const exp = biz.expenses.find(e => e.id === expId);
       if (!exp) return;
+
+      // Non-recurring: delete on pay (one-time bills)
+      const isRecurring = (exp.recurring !== false);
+      if (!isRecurring) {
+        biz.expenses = biz.expenses.filter(e => e.id !== expId);
+        save(); render();
+        return;
+      }
+
       if (!exp.paidHistory) exp.paidHistory = [];
       const now = new Date();
       let key;
@@ -1379,6 +1812,7 @@ input[type=number] { -moz-appearance: textfield; }
     let editingItem = null;
     let itemMonth = (new Date().getMonth() + 1);
     let itemWeekday = new Date().getDay();
+    let itemRecurring = true;
 
     window.openItemModal = (bizId, _ignored, itemId) => {
       itemBizId = bizId;
@@ -1386,6 +1820,7 @@ input[type=number] { -moz-appearance: textfield; }
       itemFreq = 'monthly';
       itemMonth = (new Date().getMonth() + 1);
       itemWeekday = new Date().getDay();
+      itemRecurring = true;
 
       let presetName = '', presetIncome = '', presetExpense = '', presetDay = '';
 
@@ -1401,6 +1836,7 @@ input[type=number] { -moz-appearance: textfield; }
           presetDay = exp.dueDay || '';
           itemMonth = exp.dueMonth || itemMonth;
           if (typeof exp.dueWeekday === 'number') itemWeekday = exp.dueWeekday;
+          itemRecurring = (exp.recurring !== false); // default true
         }
       }
 
@@ -1430,6 +1866,16 @@ input[type=number] { -moz-appearance: textfield; }
           </div>
 
           <div class="hint">ใส่อย่างน้อย 1 ช่อง — ถ้ามีทั้งคู่ระบบจะหักลบให้เป็นกำไรอัตโนมัติ</div>
+
+          <div class="recurring-toggle" onclick="toggleRecurring()">
+            <div class="recurring-info">
+              <div class="recurring-title">รายการประจำ</div>
+              <div class="recurring-desc" id="recurring-desc">${itemRecurring ? 'จะกลับมาทุกรอบ (เช่น ค่าน้ำ ค่าไฟ)' : 'จ่ายครั้งเดียวจบ ติ๊กจ่ายแล้วหาย'}</div>
+            </div>
+            <div class="switch ${itemRecurring ? 'on' : ''}" id="recurring-switch">
+              <div class="switch-knob"></div>
+            </div>
+          </div>
 
           <div class="field">
             <label class="label">ความถี่</label>
@@ -1507,6 +1953,16 @@ input[type=number] { -moz-appearance: textfield; }
       });
     };
 
+    window.toggleRecurring = () => {
+      itemRecurring = !itemRecurring;
+      const sw = document.getElementById('recurring-switch');
+      if (sw) sw.classList.toggle('on', itemRecurring);
+      const desc = document.getElementById('recurring-desc');
+      if (desc) desc.textContent = itemRecurring
+        ? 'จะกลับมาทุกรอบ (เช่น ค่าน้ำ ค่าไฟ)'
+        : 'จ่ายครั้งเดียวจบ ติ๊กจ่ายแล้วหาย';
+    };
+
     window.saveItem = () => {
       const name = document.getElementById('item-name').value.trim();
       const incomeAmount = parseFloat(document.getElementById('item-income').value) || 0;
@@ -1529,6 +1985,7 @@ input[type=number] { -moz-appearance: textfield; }
         dueWeekday: itemFreq === 'weekly' ? itemWeekday : null,
         frequency: itemFreq,
         dueMonth: (itemFreq === 'yearly') ? itemMonth : null,
+        recurring: itemRecurring,
       };
 
       if (editingItem) {
