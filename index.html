@@ -518,6 +518,41 @@ font-size: 9px; letter-spacing: 0.05em; font-weight: 700;
 text-transform: uppercase; margin-left: 4px; vertical-align: middle;
 }
 
+/* Template picker */
+.template-btn {
+width: 100%; padding: 12px; border-radius: 14px; border: none;
+background: linear-gradient(135deg, #FFF1B8 0%, #FFE2C9 100%);
+font-family: inherit; font-size: 13px; font-weight: 700; color: #5A4A1A;
+cursor: pointer; margin-bottom: 16px; letter-spacing: 0.02em;
+}
+.template-btn:active { transform: scale(0.98); }
+
+.tpl-cat { margin-bottom: 18px; }
+.tpl-cat-label {
+font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+color: var(–muted); font-weight: 700; margin-bottom: 8px; padding-left: 4px;
+}
+.tpl-list {
+display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+.tpl-item {
+display: flex; align-items: center; gap: 8px; padding: 10px;
+border-radius: 12px; background: #FAFAF6; border: 1px solid var(–line);
+cursor: pointer; transition: all 0.1s;
+}
+.tpl-item:active { transform: scale(0.97); background: #F1F0EA; }
+.tpl-icon {
+width: 32px; height: 32px; border-radius: 10px; flex-shrink: 0;
+background: white; display: flex; align-items: center; justify-content: center;
+font-size: 16px; border: 1px solid var(–line);
+}
+.tpl-info { flex: 1; min-width: 0; }
+.tpl-name {
+font-size: 12px; font-weight: 600;
+overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tpl-amt { font-size: 11px; color: var(–muted); margin-top: 1px; }
+
 /* Plan / Calendar */
 .plan-section { padding: 0 16px; }
 .plan-header {
@@ -1680,6 +1715,76 @@ input[type=number] { -moz-appearance: textfield; }
     const MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
     const DAYS_TH = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.']; // 0=Sunday ... 6=Saturday
 
+    // Service templates (Thailand-focused, prices as of recent typical rates)
+    const SERVICE_TEMPLATES = [
+      // Streaming / Subscriptions
+      { cat: 'streaming', name: 'Netflix Premium', icon: '🎬', amount: 419, freq: 'monthly' },
+      { cat: 'streaming', name: 'Netflix Standard', icon: '🎬', amount: 349, freq: 'monthly' },
+      { cat: 'streaming', name: 'Netflix Mobile', icon: '🎬', amount: 99, freq: 'monthly' },
+      { cat: 'streaming', name: 'YouTube Premium', icon: '▶️', amount: 159, freq: 'monthly' },
+      { cat: 'streaming', name: 'Spotify Premium', icon: '🎵', amount: 159, freq: 'monthly' },
+      { cat: 'streaming', name: 'Apple Music', icon: '🎵', amount: 159, freq: 'monthly' },
+      { cat: 'streaming', name: 'Disney+ Hotstar', icon: '🏰', amount: 99, freq: 'monthly' },
+      { cat: 'streaming', name: 'Viu Premium', icon: '📺', amount: 119, freq: 'monthly' },
+      { cat: 'streaming', name: 'iQIYI VIP', icon: '🎭', amount: 119, freq: 'monthly' },
+      { cat: 'streaming', name: 'WeTV VIP', icon: '🎞️', amount: 59, freq: 'monthly' },
+      { cat: 'streaming', name: 'Apple TV+', icon: '🍿', amount: 199, freq: 'monthly' },
+      { cat: 'streaming', name: 'HBO GO', icon: '🎥', amount: 149, freq: 'monthly' },
+
+      // AI / Productivity
+      { cat: 'ai', name: 'ChatGPT Plus', icon: '🤖', amount: 700, freq: 'monthly' },
+      { cat: 'ai', name: 'Claude Pro', icon: '✨', amount: 700, freq: 'monthly' },
+      { cat: 'ai', name: 'Gemini Advanced', icon: '💎', amount: 700, freq: 'monthly' },
+      { cat: 'ai', name: 'Notion Plus', icon: '📝', amount: 350, freq: 'monthly' },
+      { cat: 'ai', name: 'Microsoft 365', icon: '🪟', amount: 269, freq: 'monthly' },
+      { cat: 'ai', name: 'Google One 100GB', icon: '☁️', amount: 70, freq: 'monthly' },
+      { cat: 'ai', name: 'iCloud+ 200GB', icon: '☁️', amount: 99, freq: 'monthly' },
+      { cat: 'ai', name: 'Adobe Creative Cloud', icon: '🎨', amount: 1980, freq: 'monthly' },
+      { cat: 'ai', name: 'Canva Pro', icon: '🎨', amount: 380, freq: 'monthly' },
+
+      // Telco / Internet
+      { cat: 'telco', name: 'AIS Fibre', icon: '📡', amount: 599, freq: 'monthly' },
+      { cat: 'telco', name: 'True Online', icon: '📡', amount: 599, freq: 'monthly' },
+      { cat: 'telco', name: '3BB Fiber', icon: '📡', amount: 599, freq: 'monthly' },
+      { cat: 'telco', name: 'NT Internet', icon: '📡', amount: 590, freq: 'monthly' },
+      { cat: 'telco', name: 'AIS รายเดือน', icon: '📱', amount: 599, freq: 'monthly' },
+      { cat: 'telco', name: 'True รายเดือน', icon: '📱', amount: 599, freq: 'monthly' },
+      { cat: 'telco', name: 'dtac รายเดือน', icon: '📱', amount: 499, freq: 'monthly' },
+
+      // Utilities (home)
+      { cat: 'home', name: 'ค่าไฟ (MEA/PEA)', icon: '💡', amount: 1500, freq: 'monthly' },
+      { cat: 'home', name: 'ค่าน้ำประปา', icon: '💧', amount: 250, freq: 'monthly' },
+      { cat: 'home', name: 'ค่าเช่าบ้าน/ห้อง', icon: '🏠', amount: 8000, freq: 'monthly' },
+      { cat: 'home', name: 'ค่าเช่าร้าน', icon: '🏪', amount: 15000, freq: 'monthly' },
+      { cat: 'home', name: 'ค่าส่วนกลาง', icon: '🏢', amount: 1500, freq: 'monthly' },
+      { cat: 'home', name: 'ค่าทำความสะอาด', icon: '🧹', amount: 800, freq: 'monthly' },
+
+      // Insurance / Yearly
+      { cat: 'yearly', name: 'ประกันรถยนต์ ชั้น 1', icon: '🚗', amount: 18000, freq: 'yearly' },
+      { cat: 'yearly', name: 'พ.ร.บ.รถยนต์', icon: '🚗', amount: 645, freq: 'yearly' },
+      { cat: 'yearly', name: 'ภาษีรถยนต์', icon: '🚗', amount: 1500, freq: 'yearly' },
+      { cat: 'yearly', name: 'ประกันสุขภาพ', icon: '🏥', amount: 25000, freq: 'yearly' },
+      { cat: 'yearly', name: 'Apple One รายปี', icon: '🍎', amount: 4490, freq: 'yearly' },
+      { cat: 'yearly', name: 'Google Workspace', icon: '🗂️', amount: 2400, freq: 'yearly' },
+
+      // Common business
+      { cat: 'business', name: 'เงินเดือนพนักงาน', icon: '👤', amount: 15000, freq: 'monthly' },
+      { cat: 'business', name: 'ค่าจ้างรายวัน', icon: '👤', amount: 500, freq: 'weekly' },
+      { cat: 'business', name: 'ค่าวัตถุดิบ', icon: '📦', amount: 5000, freq: 'monthly' },
+      { cat: 'business', name: 'ค่าโฆษณา Facebook', icon: '📣', amount: 3000, freq: 'monthly' },
+      { cat: 'business', name: 'ค่าธรรมเนียม Shopee', icon: '🛍️', amount: 1500, freq: 'monthly' },
+      { cat: 'business', name: 'ค่าธรรมเนียม Lazada', icon: '🛒', amount: 1500, freq: 'monthly' },
+    ];
+
+    const TEMPLATE_CATS = [
+      { id: 'streaming', label: 'สตรีมมิ่ง' },
+      { id: 'ai', label: 'AI / โปรแกรม' },
+      { id: 'telco', label: 'อินเทอร์เน็ต/มือถือ' },
+      { id: 'home', label: 'ค่าใช้จ่ายในบ้าน' },
+      { id: 'yearly', label: 'ประกัน/รายปี' },
+      { id: 'business', label: 'ธุรกิจ' },
+    ];
+
     window.openExpModal = (bizId, expId) => {
       expBizId = bizId;
       editingExp = null;
@@ -1849,9 +1954,20 @@ input[type=number] { -moz-appearance: textfield; }
           <div class="grab"></div>
           <h2 class="serif">${editingItem ? 'แก้ไขรายการ' : 'เพิ่มรายการ'}</h2>
 
+          ${!editingItem ? `
+            <button class="template-btn" onclick="openTemplatePicker()">
+              ⚡ เลือกจากเทมเพลต (Netflix, ค่าไฟ, ฯลฯ)
+            </button>
+          ` : ''}
+
           <div class="field">
             <label class="label">ชื่อรายการ</label>
-            <input class="input" id="item-name" value="${escapeHtml(presetName)}" placeholder="เช่น บ้านปล่อยเช่า, ค่าเช่าร้าน" />
+            <input class="input" id="item-name" list="template-list" autocomplete="off"
+              value="${escapeHtml(presetName)}" placeholder="เช่น บ้านปล่อยเช่า, ค่าเช่าร้าน"
+              oninput="onNameInput(this.value)" />
+            <datalist id="template-list">
+              ${SERVICE_TEMPLATES.map(t => `<option value="${escapeHtml(t.name)}"></option>`).join('')}
+            </datalist>
           </div>
 
           <div class="row-2">
@@ -2009,6 +2125,82 @@ input[type=number] { -moz-appearance: textfield; }
       biz.expenses = (biz.expenses || []).filter(e => e.id !== incId);
       if (biz.incomes) biz.incomes = biz.incomes.filter(i => i.id !== incId);
       save(); render();
+    };
+
+    // ===== Template picker =====
+    window.onNameInput = (val) => {
+      // Auto-fill amount when matching a template
+      const trimmed = val.trim();
+      if (!trimmed) return;
+      const match = SERVICE_TEMPLATES.find(t => t.name.toLowerCase() === trimmed.toLowerCase());
+      if (match) {
+        const expInput = document.getElementById('item-expense');
+        if (expInput && !expInput.value) expInput.value = match.amount;
+        // Auto-set frequency
+        if (match.freq && match.freq !== itemFreq) {
+          window.pickItemFreq(match.freq);
+        }
+      }
+    };
+
+    window.openTemplatePicker = () => {
+      const modal = document.createElement('div');
+      modal.className = 'modal-bg';
+      modal.id = 'template-modal';
+      modal.style.zIndex = '60';
+      modal.onclick = (e) => { if (e.target === modal) closeTemplatePicker(); };
+
+      modal.innerHTML = `
+        <div class="modal" style="max-height: 85vh;">
+          <div class="grab"></div>
+          <h2 class="serif">เลือกเทมเพลต</h2>
+          <div class="hint" style="margin: 0 0 12px;">ราคาเป็นค่าประมาณ ปรับได้ภายหลัง</div>
+          ${TEMPLATE_CATS.map(cat => {
+            const items = SERVICE_TEMPLATES.filter(t => t.cat === cat.id);
+            return `
+              <div class="tpl-cat">
+                <div class="tpl-cat-label">${cat.label}</div>
+                <div class="tpl-list">
+                  ${items.map((t, idx) => {
+                    const globalIdx = SERVICE_TEMPLATES.indexOf(t);
+                    const freqLabel = t.freq === 'monthly' ? '/ด.' : t.freq === 'yearly' ? '/ปี' : '/สัปดาห์';
+                    return `
+                      <div class="tpl-item" onclick="applyTemplate(${globalIdx})">
+                        <div class="tpl-icon">${t.icon}</div>
+                        <div class="tpl-info">
+                          <div class="tpl-name">${escapeHtml(t.name)}</div>
+                          <div class="tpl-amt">${fmt(t.amount)} ${freqLabel}</div>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+          <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeTemplatePicker()">ปิด</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    };
+
+    window.closeTemplatePicker = () => {
+      const m = document.getElementById('template-modal');
+      if (m) m.remove();
+    };
+
+    window.applyTemplate = (idx) => {
+      const t = SERVICE_TEMPLATES[idx];
+      if (!t) return;
+      // Fill the item modal fields
+      const nameInput = document.getElementById('item-name');
+      const expInput = document.getElementById('item-expense');
+      if (nameInput) nameInput.value = t.name;
+      if (expInput) expInput.value = t.amount;
+      if (t.freq) window.pickItemFreq(t.freq);
+      closeTemplatePicker();
     };
 
     // Init
